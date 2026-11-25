@@ -8,7 +8,7 @@ components integrate without rework.
 - **Project:** Arabic Named Entity Recognition — A Comparative Study (AIS-411)
 - **Team:** 4 members, one distinct approach each
 - **Models:** CRF (classical), mBERT (multilingual), AraBERT (Arabic), MARBERT (advanced Arabic)
-- **Owner placeholders:** `[M1]`, `[M2]`, `[M3]`, `[M4]` (`M4` is also Project Manager)
+- **Owner placeholders:** `[M1]`, `[M2]`, `[M3]`, `[M4]` (`M1` is also Project Manager)
 
 ---
 
@@ -198,14 +198,14 @@ python src/approach_2_mbert/train.py --config configs/mbert.yaml --epochs 3 --ba
 
 | Area / file | Lead | Reviewers |
 | :--- | :--- | :--- |
-| `src/common/`, `ROADMAP.md`, infra | M4 | all |
+| `src/common/`, `ROADMAP.md`, infra | M1 | all |
 | `data/`, `src/data_utils.py` | M1 | M4 |
 | `src/evaluate.py`, `src/results.py` | M1 | all approach owners |
 | `src/approach_1_crf/` | M1 | M4 |
-| `src/approach_2_mbert/` | M2 | M4 |
-| `src/approach_3_arabert/` | M3 | M4 |
+| `src/approach_2_mbert/` | M2 | M1 |
+| `src/approach_3_arabert/` | M3 | M1 |
 | `src/approach_4_marbert/` | M4 | M1 |
-| `src/compare.py`, `reports/` | M4 | all |
+| `src/compare.py`, `reports/` | M1 | all |
 
 ---
 
@@ -214,14 +214,14 @@ python src/approach_2_mbert/train.py --config configs/mbert.yaml --epochs 3 --ba
 Issue ids below are stable and are used as the title prefix on GitHub
 (e.g. `[1.4] Subword label alignment`). Execute in dependency order.
 
-### Epic 0 — Infrastructure (`M0`) — Owner: [M4]
+### Epic 0 — Infrastructure (`M0`) — Owner: [M1]
 
 | ID | Title | Owner | Depends | Acceptance criteria |
 | :--- | :--- | :--- | :--- | :--- |
-| 0.1 | Repo scaffold & canonical directory structure | M4 | – | Tree matches §2.1; `pip install -r requirements.txt` works; `.gitignore` excludes `data/raw`, `results/models` |
-| 0.2 | Labels, milestones, project board & issue/PR templates | M4 | 0.1 | Labels per §2.7; 3 milestones; templates present |
+| 0.1 | Repo scaffold & canonical directory structure | M1 | – | Tree matches §2.1; `pip install -r requirements.txt` works; `.gitignore` excludes `data/raw`, `results/models` |
+| 0.2 | Labels, milestones, project board & issue/PR templates | M1 | 0.1 | Labels per §2.7; 3 milestones; templates present |
 | 0.3 | Shared utilities: config, seeding, logging | M1 | 0.1 | `src/common/config.py` is the only label source; `set_seed` reproducible |
-| 0.4 | Model artifact & checkpoint policy | M4 | 0.1 | Policy documented; checkpoints not in git; loading path defined |
+| 0.4 | Model artifact & checkpoint policy | M1 | 0.1 | Policy documented; checkpoints not in git; loading path defined |
 
 ### Epic 1 — Data Pipeline (`M1`) — Owner: [M1]
 
@@ -283,23 +283,23 @@ Issue ids below are stable and are used as the title prefix on GitHub
 | 6.4 | Evaluation & error analysis | M4 | 6.3 | `results/metrics/marbert.json`; error examples documented |
 | 6.5 | MARBERT report section | M4 | 6.4 | Methods/results/errors written for Phase 1 report |
 
-### Epic 7 — Comparative Analysis (`M2`) — Owner: [M4]
+### Epic 7 — Comparative Analysis (`M2`) — Owner: [M1]
 
 | ID | Title | Owner | Depends | Acceptance criteria |
 | :--- | :--- | :--- | :--- | :--- |
-| 7.1 | Aggregate results & comparison table | M4 | 3.4, 4.4, 5.4, 6.4 | README table populated from `results/metrics/*.json` |
-| 7.2 | Cross-model error analysis | M4 | 7.1 | Shared/differing error patterns in `reports/analysis/` |
-| 7.3 | Significance / statistical comparison | M4 | 7.1 | Method + result documented |
-| 7.4 | Visualization dashboard | M4 | 7.1 | Per-entity F1, F1 vs size/latency in `results/plots/` |
+| 7.1 | Aggregate results & comparison table | M1 | 3.4, 4.4, 5.4, 6.4 | README table populated from `results/metrics/*.json` |
+| 7.2 | Cross-model error analysis | M1 | 7.1 | Shared/differing error patterns in `reports/analysis/` |
+| 7.3 | Significance / statistical comparison | M1 | 7.1 | Method + result documented |
+| 7.4 | Visualization dashboard | M1 | 7.1 | Per-entity F1, F1 vs size/latency in `results/plots/` |
 
-### Epic 8 — Reporting (`M2`) — Owner: [M4]
+### Epic 8 — Reporting (`M2`) — Owner: [M1]
 
 | ID | Title | Owner | Depends | Acceptance criteria |
 | :--- | :--- | :--- | :--- | :--- |
-| 8.1 | Phase 1 report | M4 | 3.5, 4.5, 5.5, 6.5 | Report in `reports/phase1/` |
-| 8.2 | Phase 2 report | M4 | 7.1–7.4 | Report in `reports/phase2/` |
-| 8.3 | Presentation slides | M4 | 8.2 | Final deck in `reports/phase2/` |
-| 8.4 | README results & reproducibility update | M4 | 7.1, 8.2 | Results table + repro steps current |
+| 8.1 | Phase 1 report | M1 | 3.5, 4.5, 5.5, 6.5 | Report in `reports/phase1/` |
+| 8.2 | Phase 2 report | M1 | 7.1–7.4 | Report in `reports/phase2/` |
+| 8.3 | Presentation slides | M1 | 8.2 | Final deck in `reports/phase2/` |
+| 8.4 | README results & reproducibility update | M1 | 7.1, 8.2 | Results table + repro steps current |
 
 ---
 
@@ -307,7 +307,7 @@ Issue ids below are stable and are used as the title prefix on GitHub
 
 - Use the GitHub **Project board** with columns: `Backlog`, `In Progress`, `In Review`, `Done`.
 - An issue moves to `In Progress` only when its dependencies are `Done`.
-- The PM (`M4`) reviews the board at the start of each work session and unblocks
+- The PM (`M1`) reviews the board at the start of each work session and unblocks
   `blocked` issues.
 
 ## 5. Definition of Done (global)
