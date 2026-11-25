@@ -8,7 +8,16 @@ components integrate without rework.
 - **Project:** Arabic Named Entity Recognition — A Comparative Study (AIS-411)
 - **Team:** 4 members, one distinct approach each
 - **Models:** CRF (classical), mBERT (multilingual), AraBERT (Arabic), MARBERT (advanced Arabic)
-- **Owner placeholders:** `[M1]`, `[M2]`, `[M3]`, `[M4]` (`M1` is also Project Manager)
+- **Owner codes:** `[M1]`, `[M2]`, `[M3]`, `[M4]` — resolve via the Team Roster below (`M1` is Project Manager)
+
+### Team Roster
+
+| Code | Member | GitHub | Role | Approach |
+| :--- | :--- | :--- | :--- | :--- |
+| M1 | Member 1 | `@Darth-218` | **Project Manager** | Data/EDA + CRF |
+| M2 | Jannah Ashraf | `@jannahashraf` | Member | mBERT |
+| M3 | Omar Hesham | `@OmarHesham2356` | Member | AraBERT |
+| M4 | Ahmed Maboud | `@ahmedmaboud` | Member | MARBERT |
 
 ---
 

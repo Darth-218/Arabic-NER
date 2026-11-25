@@ -21,10 +21,10 @@ Following the course guidelines for Phase 1 and Phase 2, this project is structu
 ## 👥 Team Members & Assigned Approaches
 To satisfy the Phase 1 requirement that *each team member implements one approach*, our comparative study is divided as follows:
 
-*   **[Member 1 Name]:** Data Preprocessing, EDA & **Classical Approach** (Conditional Random Fields / BiLSTM-CRF) & **Project Manager**
-*   **[Member 2 Name]:** **Multilingual Transformer** (mBERT or XLM-RoBERTa)
-*   **[Member 3 Name]:** **Arabic-Specific Transformer** (AraBERT or CAMeLBERT)
-*   **[Member 4 Name]:** **Advanced Arabic Transformer** (MARBERT)
+*   **Member 1 — Project Manager:** Data Preprocessing, EDA & **Classical Approach** (Conditional Random Fields / BiLSTM-CRF) — [@Darth-218](https://github.com/Darth-218)
+*   **Member 2:** **Multilingual Transformer** (mBERT) — Jannah Ashraf ([@jannahashraf](https://github.com/jannahashraf))
+*   **Member 3:** **Arabic-Specific Transformer** (AraBERT) — Omar Hesham ([@OmarHesham2356](https://github.com/OmarHesham2356))
+*   **Member 4:** **Advanced Arabic Transformer** (MARBERT) — Ahmed Maboud ([@ahmedmaboud](https://github.com/ahmedmaboud))
 
 ## 📂 Repository Structure
 The full canonical layout is defined in [`ROADMAP.md` §2.1](ROADMAP.md#21-canonical-repository-structure).
