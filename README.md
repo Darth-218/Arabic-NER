@@ -5,6 +5,10 @@ This repository contains the code, data processing scripts, and results for the 
 
 Following the course guidelines for Phase 1 and Phase 2, this project is structured as a **Comparative Study**. Our goal is to identify Persons (`PER`), Organizations (`ORG`), and Locations (`LOC`) in Arabic text using the WikiANN dataset. To fulfill the requirement that each team member implements a distinct approach, we compare classical machine learning methods against multilingual and Arabic-specific Transformer architectures.
 
+> **Planning & conventions:** see [`ROADMAP.md`](ROADMAP.md) for the authoritative
+> directory structure, shared interfaces, evaluation schema, and the issue breakdown
+> each member is responsible for. All work must follow that Canonical Contract.
+
 ## 📊 Dataset
 *   **Source:** `unimelb-nlp/wikiann` (Hugging Face Datasets) - Arabic (`ar`)
 *   **Splits:** 20,000 train, 10,000 validation, 10,000 test sequences.
@@ -23,26 +27,35 @@ To satisfy the Phase 1 requirement that *each team member implements one approac
 *   **[Member 4 Name]:** **Advanced Arabic Transformer** (MARBERT) & Project Manager
 
 ## 📂 Repository Structure
+The full canonical layout is defined in [`ROADMAP.md` §2.1](ROADMAP.md#21-canonical-repository-structure).
+Summary:
 ```text
-├── data/                  # Dataset loading and EDA scripts (Member 1)
+├── data/                    # Dataset loader + EDA (Member 1)
 ├── src/
-│   ├── data_utils.py      # Sub-word token alignment logic
-│   ├── approach_1_crf/    # Classical ML implementation (Member 1)
-│   ├── approach_2_mbert/  # Multilingual transformer (Member 2)
-│   ├── approach_3_arabert/# Arabic transformer (Member 3)
-│   └── approach_4_marbert/# Advanced Arabic transformer (Member 4)
-├── results/               # Unified evaluation metrics and F1-scores
-├── reports/               # Phase 1 & Phase 2 reports & presentation
-├── requirements.txt       # Python dependencies
-└── README.md              # Project documentation
+│   ├── common/              # Labels, seeding, logging (shared source of truth)
+│   ├── data_utils.py        # Tokenization + sub-word label alignment
+│   ├── evaluate.py          # seqeval metrics + per-class report
+│   ├── results.py           # Unified metrics writer + README table
+│   ├── compare.py           # Cross-model comparison
+│   ├── approach_1_crf/      # Classical ML (Member 1)
+│   ├── approach_2_mbert/    # Multilingual transformer (Member 2)
+│   ├── approach_3_arabert/  # Arabic transformer (Member 3)
+│   └── approach_4_marbert/  # Advanced Arabic transformer (Member 4)
+├── configs/                 # One YAML per approach
+├── results/                 # metrics/, predictions/, plots/
+├── reports/                 # eda/, analysis/, phase1/, phase2/
+├── tests/                   # Unit tests for shared modules
+├── requirements.txt
+├── ROADMAP.md               # Canonical contract + issue breakdown
+└── README.md
 ```
 
 ## 🚀 Setup & Installation
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/arabic-ner-comparative-study.git
-   cd arabic-ner-comparative-study
+   git clone https://github.com/Darth-218/Arabic-NER.git
+   cd Arabic-NER
    ```
 
 2. Create a virtual environment and install dependencies:
