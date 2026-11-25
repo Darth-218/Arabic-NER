@@ -1,0 +1,30 @@
+# Arabic NER — Python dependencies
+# Exact versions are frozen with `pip freeze` at the install step.
+# NOTE: nothing is installed by committing this file.
+
+# Data / NLP
+datasets>=2.19
+transformers>=4.40
+tokenizers>=0.15
+sentencepiece>=0.2
+
+# Modeling
+torch>=2.2
+accelerate>=0.30
+
+# Classical CRF (library finalized at issue #15)
+sklearn-crfsuite>=0.4
+
+# Evaluation
+seqeval>=1.2.2
+scikit-learn>=1.4
+
+# Utilities
+numpy>=1.26
+pandas>=2.2
+matplotlib>=3.8
+pyyaml>=6.0
+tqdm>=4.66
+
+# Dev / testing
+pytest>=8.0

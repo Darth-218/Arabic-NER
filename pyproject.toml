@@ -1,0 +1,9 @@
+[project]
+name = "arabic-ner"
+version = "0.1.0"
+description = "Arabic Named Entity Recognition: A Comparative Study (AIS-411)"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

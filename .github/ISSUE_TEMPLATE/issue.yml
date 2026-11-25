@@ -1,0 +1,64 @@
+name: Task
+description: Track a roadmap task
+title: "[ID] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Follow the Canonical Contract in `ROADMAP.md` §2. Use the roadmap issue id
+        as the title prefix, e.g. `[1.4] Subword label alignment`.
+
+  - type: input
+    id: goal
+    attributes:
+      label: Goal
+      description: One or two sentences describing the outcome.
+    validations:
+      required: true
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: Tasks
+      value: |
+        - [ ] Task 1
+        - [ ] Task 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: deliverables
+    attributes:
+      label: Deliverables
+      description: Files and artifacts produced at the canonical paths.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      value: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+    validations:
+      required: true
+
+  - type: input
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Blocking roadmap issue ids, or "None".
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: dod
+    attributes:
+      label: Definition of Done
+      options:
+        - label: Code merged to main via reviewed PR
+        - label: "`make test` passes; new logic has tests"
+        - label: Artifacts written to canonical paths (ROADMAP §2)
+        - label: Roadmap conventions unchanged, or updated in the same PR
+        - label: Acceptance criteria verified
