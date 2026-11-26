@@ -45,6 +45,10 @@ Use the **same `--max_samples` value** in `predict.py` and `evaluate.py`, and
 write smoke artifacts to separate paths so they never overwrite a real run.
 The smoke F1 is meaningless — it only proves the pipeline works end to end.
 
+On Windows, if the model download fails with a Hugging Face *Xet/CAS* error,
+set `$env:HF_HUB_DISABLE_XET="1"` before running (plain HTTP download works).
+Smoke artifacts match the ignore rules in `.gitignore` and are never committed.
+
 Uses the shared loader, data utilities, evaluation and results writer — it does
 **not** reimplement tokenization, alignment or metrics.
 

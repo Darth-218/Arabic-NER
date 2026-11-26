@@ -200,6 +200,9 @@ def make_trainer(
     eval_loader: Any,
 ) -> Any:
     """Create a Hugging Face Trainer with reproducible, comparable settings."""
+    import inspect
+    import math
+
     from transformers import Trainer, TrainingArguments
 
     arguments = {
@@ -209,7 +212,7 @@ def make_trainer(
         "per_device_eval_batch_size": int(config["eval_batch_size"]),
         "learning_rate": float(config["lr"]),
         "weight_decay": float(config["weight_decay"]),
-        "warmup_ratio": float(config["warmup_ratio"]),
+        "optim": "adamw_torch",  # works on CPU and GPU across versions
         "save_strategy": "epoch",
         "save_total_limit": 2,
         "load_best_model_at_end": True,
@@ -221,6 +224,16 @@ def make_trainer(
         "seed": int(config["seed"]),
         "fp16": bool(config["fp16"]),
     }
+    # transformers 5.x replaced warmup_ratio with warmup_steps; translate the
+    # ratio into steps so configs/marbert.yaml stays compatible with both.
+    parameters = inspect.signature(TrainingArguments.__init__).parameters
+    if "warmup_ratio" in parameters:
+        arguments["warmup_ratio"] = float(config["warmup_ratio"])
+    elif "warmup_steps" in parameters:
+        total_steps = max(1, math.ceil(len(train_loader) * int(config["epochs"])))
+        arguments["warmup_steps"] = int(
+            round(float(config["warmup_ratio"]) * total_steps)
+        )
     try:  # transformers >= 4.46 renamed evaluation_strategy -> eval_strategy
         training_args = TrainingArguments(eval_strategy="epoch", **arguments)
     except TypeError as error:
