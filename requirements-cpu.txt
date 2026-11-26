@@ -1,0 +1,6 @@
+# Full CPU environment (modeling).
+# Install with: pip install -r requirements-cpu.txt
+-r requirements.txt
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.2
+accelerate>=0.30

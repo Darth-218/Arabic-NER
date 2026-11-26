@@ -86,7 +86,10 @@ arabic-ner/
 │   ├── phase1/                 # 8.1
 │   └── phase2/                 # 8.2
 ├── tests/                      # unit tests for data_utils, evaluate, results
-├── requirements.txt
+├── requirements.txt            # shared runtime deps (no torch)
+├── requirements-data.txt       # data-only subset (datasets/pandas/pyarrow)
+├── requirements-cpu.txt        # shared deps + CPU torch
+├── requirements-gpu.txt        # shared deps + CUDA torch
 ├── Makefile
 ├── ROADMAP.md                  # this file
 └── README.md
@@ -174,7 +177,9 @@ Canonical model identifiers: **`crf`, `mbert`, `arabert`, `marbert`**.
 ### 2.6 Canonical commands
 
 ```bash
-make install     # pip install -r requirements.txt
+make install-data   # pip install -r requirements-data.txt (data-only)
+make install-cpu    # pip install -r requirements-cpu.txt (modeling, CPU torch)
+make install-gpu    # pip install -r requirements-gpu.txt (modeling, CUDA torch)
 make data        # python data/load_data.py
 make train M=crf    # python src/approach_1_crf/train.py --config configs/crf.yaml
 make predict M=crf

@@ -2,15 +2,15 @@
 # Exact versions are frozen with `pip freeze` at the install step.
 # NOTE: nothing is installed by committing this file.
 
+# Shared runtime dependencies (no torch here).
+# Install PyTorch via requirements-cpu.txt or requirements-gpu.txt, and the
+# lightweight data-only subset via requirements-data.txt.
+
 # Data / NLP
 datasets>=2.19
 transformers>=4.40
 tokenizers>=0.15
 sentencepiece>=0.2
-
-# Modeling
-torch>=2.2
-accelerate>=0.30
 
 # Classical CRF (library finalized at issue #15)
 sklearn-crfsuite>=0.4

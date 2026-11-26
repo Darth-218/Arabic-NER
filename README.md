@@ -60,15 +60,21 @@ Summary:
 
 2. Create a virtual environment and install dependencies:
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-   pip install -r requirements.txt
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows use `.venv\Scripts\activate`
+
+   # data-only first (datasets/pandas/pyarrow)
+   pip install -r requirements-data.txt
+
+   # full environment (modeling): choose one
+   pip install -r requirements-cpu.txt   # CPU torch
+   pip install -r requirements-gpu.txt   # CUDA torch
    ```
 
-3. Download the dataset:
+3. Download the dataset (cached under `data/raw/`, git-ignored):
    ```python
    from datasets import load_dataset
-   data = load_dataset("unimelb-nlp/wikiann", "ar")
+   data = load_dataset("unimelb-nlp/wikiann", "ar", cache_dir="data/raw")
    ```
 
 ## 💻 Usage

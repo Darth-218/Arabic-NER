@@ -6,11 +6,14 @@ APPROACH_mbert := approach_2_mbert
 APPROACH_arabert := approach_3_arabert
 APPROACH_marbert := approach_4_marbert
 
-.PHONY: help install test data eda quality train predict evaluate compare clean
+.PHONY: help install install-data install-cpu install-gpu test data eda quality train predict evaluate compare clean
 
 help:
 	@echo "Arabic NER — available targets"
-	@echo "  make install            Install dependencies (pip)"
+	@echo "  make install-data       Install data-only deps (datasets/pandas/pyarrow)"
+	@echo "  make install-cpu        Install full CPU env (incl. torch)"
+	@echo "  make install-gpu        Install full CUDA env (incl. torch)"
+	@echo "  make install            Alias for install-data"
 	@echo "  make test               Run the test suite"
 	@echo "  make data               Load/cache the WikiANN ar dataset"
 	@echo "  make eda                Execute the EDA notebook"
@@ -21,8 +24,16 @@ help:
 	@echo "  make compare            Regenerate the comparison table"
 	@echo "  make clean              Remove caches"
 
-install:
-	$(PY) -m pip install -r requirements.txt
+install: install-data
+
+install-data:
+	$(PY) -m pip install -r requirements-data.txt
+
+install-cpu:
+	$(PY) -m pip install -r requirements-cpu.txt
+
+install-gpu:
+	$(PY) -m pip install -r requirements-gpu.txt
 
 test:
 	$(PY) -m pytest

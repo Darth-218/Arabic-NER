@@ -17,13 +17,19 @@ pkgs.mkShell {
 
   shellHook = ''
     export LD_LIBRARY_PATH="${pkgs.stdenv.cc.cc.lib}/lib:${pkgs.zlib}/lib:${pkgs.zeromq}/lib:$LD_LIBRARY_PATH"
+    # Project-local Hugging Face caches (git-ignored under data/raw/).
+    mkdir -p "$PWD/data/raw/hf"
+    export HF_HOME="$PWD/data/raw/hf"
+    export HF_HUB_CACHE="$HF_HOME/hub"
+    export HF_DATASETS_CACHE="$HF_HOME/datasets"
     echo "──────────────────────────────────────────────"
     echo " Arabic NER dev shell"
     echo " python: $(python --version 2>&1)"
+    echo " HF_HOME: $HF_HOME"
     echo "──────────────────────────────────────────────"
     if [ ! -d .venv ]; then
       echo " No .venv yet. Create it with:"
-      echo "   python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt"
+      echo "   python -m venv .venv && source .venv/bin/activate && pip install -r requirements-data.txt"
     else
       echo " Activate the venv with:  source .venv/bin/activate"
     fi
