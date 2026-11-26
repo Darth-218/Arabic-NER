@@ -25,6 +25,26 @@ python src/evaluate.py --model marbert --split test --config configs/marbert.yam
 python src/approach_4_marbert/hparam_search.py --dry-run
 ```
 
+### Smoke test (before any full run)
+
+All three entry points accept a matching sample limit so the plumbing can be
+verified in minutes without training on the full dataset:
+
+```bash
+python src/approach_4_marbert/train.py --config configs/marbert.yaml \
+  --epochs 1 --max_train_samples 200 --max_eval_samples 100 \
+  --output_dir results/models/marbert_smoke
+python src/approach_4_marbert/predict.py --model_dir results/models/marbert_smoke \
+  --split test --max_samples 100 --out results/predictions/marbert_smoke_test.jsonl
+python src/evaluate.py --model marbert --split test --config configs/marbert.yaml \
+  --max_samples 100 --predictions results/predictions/marbert_smoke_test.jsonl \
+  --out results/metrics/marbert_smoke.json
+```
+
+Use the **same `--max_samples` value** in `predict.py` and `evaluate.py`, and
+write smoke artifacts to separate paths so they never overwrite a real run.
+The smoke F1 is meaningless — it only proves the pipeline works end to end.
+
 Uses the shared loader, data utilities, evaluation and results writer — it does
 **not** reimplement tokenization, alignment or metrics.
 

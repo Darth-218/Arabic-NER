@@ -52,6 +52,8 @@ DEFAULTS: dict[str, Any] = {
     "fp16": False,
     "label_all_subwords": False,
     "output_dir": "results/models/marbert",
+    "max_train_samples": None,
+    "max_eval_samples": None,
 }
 
 CLI_OVERRIDABLE = (
@@ -64,6 +66,8 @@ CLI_OVERRIDABLE = (
     "max_len",
     "model_name",
     "fp16",
+    "max_train_samples",
+    "max_eval_samples",
 )
 
 
@@ -80,7 +84,30 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max_len", type=int, default=None)
     parser.add_argument("--model_name", default=None)
     parser.add_argument("--fp16", action="store_true", default=None)
+    parser.add_argument(
+        "--max_train_samples",
+        type=int,
+        default=None,
+        help="Smoke-test only: use the first N training sequences",
+    )
+    parser.add_argument(
+        "--max_eval_samples",
+        type=int,
+        default=None,
+        help="Smoke-test only: use the first N validation sequences",
+    )
     return parser
+
+
+def limit_split(split: Any, limit: int | None, name: str) -> Any:
+    """Take the first `limit` rows of a HF split; None means no limiting."""
+    if limit is None:
+        return split
+    if limit <= 0:
+        raise ValueError(f"--max_{name}_samples must be positive, got {limit}")
+    if limit > len(split):
+        raise ValueError(f"--max_{name}_samples={limit} exceeds split size {len(split)}")
+    return split.select(range(limit))
 
 
 def load_config(path: str | Path) -> dict[str, Any]:
@@ -220,6 +247,16 @@ def main(argv: Sequence[str] | None = None) -> None:
 
     LOGGER.info("Loading WikiANN ar through the canonical loader")
     dataset = load_arabic_wikiann(cache_dir=config.get("cache_dir"))
+    train_split = limit_split(dataset["train"], config.get("max_train_samples"), "train")
+    validation_split = limit_split(
+        dataset["validation"], config.get("max_eval_samples"), "eval"
+    )
+    if config.get("max_train_samples") or config.get("max_eval_samples"):
+        LOGGER.warning(
+            "SMOKE TEST: train=%d validation=%d (not a reportable run)",
+            len(train_split),
+            len(validation_split),
+        )
     LOGGER.info(
         "Fine-tuning %s: epochs=%s batch=%s lr=%s max_len=%s",
         config["model_name"],
@@ -234,7 +271,7 @@ def main(argv: Sequence[str] | None = None) -> None:
     )
     normalization = normalization_from_config(config.get("normalization"))
     train_loader = make_token_classification_dataloader(
-        dataset["train"],
+        train_split,
         tokenizer,
         batch_size=int(config["batch_size"]),
         max_len=int(config["max_len"]),
@@ -244,7 +281,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         label_all_subwords=bool(config["label_all_subwords"]),
     )
     eval_loader = make_token_classification_dataloader(
-        dataset["validation"],
+        validation_split,
         tokenizer,
         batch_size=int(config["eval_batch_size"]),
         max_len=int(config["max_len"]),

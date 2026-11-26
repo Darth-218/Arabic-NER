@@ -114,17 +114,34 @@ def evaluate_model(
     config_path: str | Path | None = None,
     out: str | Path | None = None,
     diagnostics: bool = True,
+    max_samples: int | None = None,
+    predictions: str | Path | None = None,
 ) -> dict[str, Any]:
-    """Score `results/predictions/<model>_<split>.jsonl` against the gold data."""
+    """Score predictions against the gold data.
+
+    By default reads `results/predictions/<model>_<split>.jsonl`; `--predictions`
+    exists so smoke runs cannot overwrite canonical artifacts.
+    """
     if split not in SPLITS:
         raise ValueError(f"--split must be one of {SPLITS}")
-    prediction_path = PREDICTIONS_DIR / f"{model}_{split}.jsonl"
+    prediction_path = (
+        Path(predictions)
+        if predictions is not None
+        else PREDICTIONS_DIR / f"{model}_{split}.jsonl"
+    )
     records = load_predictions(prediction_path)
 
     dataset = load_arabic_wikiann()
     if split not in dataset:
         raise ValueError(f"Dataset has no {split!r} split")
     gold_sequences = [decode_tags(tags) for tags in dataset[split]["ner_tags"]]
+    if max_samples is not None:
+        if max_samples <= 0 or max_samples > len(gold_sequences):
+            raise ValueError(
+                f"--max_samples must be between 1 and {len(gold_sequences)}, "
+                f"got {max_samples}"
+            )
+        gold_sequences = gold_sequences[:max_samples]
     if len(records) != len(gold_sequences):
         raise ValueError(
             f"{prediction_path} has {len(records)} rows but {split} has "
@@ -167,6 +184,17 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--split", default="test", choices=SPLITS)
     parser.add_argument("--config", default=None, help="optional configs/<model>.yaml")
     parser.add_argument("--out", default=None, help="override metrics output path")
+    parser.add_argument(
+        "--max_samples",
+        type=int,
+        default=None,
+        help="Smoke-test only: score only the first N gold sequences",
+    )
+    parser.add_argument(
+        "--predictions",
+        default=None,
+        help="override the predictions file (use a separate path for smoke runs)",
+    )
     return parser
 
 
@@ -177,5 +205,7 @@ if __name__ == "__main__":
         split=arguments.split,
         config_path=arguments.config,
         out=arguments.out,
+        max_samples=arguments.max_samples,
+        predictions=arguments.predictions,
     )
     print(json.dumps(scores, indent=2))

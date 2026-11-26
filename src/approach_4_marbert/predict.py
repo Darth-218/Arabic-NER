@@ -99,6 +99,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--batch_size", type=int, default=None)
     parser.add_argument("--max_len", type=int, default=None)
     parser.add_argument("--device", default=None, help="cpu, cuda, or auto (default)")
+    parser.add_argument(
+        "--max_samples",
+        type=int,
+        default=None,
+        help="Smoke-test only: predict the first N sequences of the split",
+    )
     return parser
 
 
@@ -134,10 +140,20 @@ def predict(arguments: argparse.Namespace) -> Path:
     if arguments.split not in dataset:
         raise ValueError(f"Dataset has no {arguments.split!r} split")
 
+    tokens = dataset[arguments.split]["tokens"]
+    if arguments.max_samples is not None:
+        if arguments.max_samples <= 0 or arguments.max_samples > len(tokens):
+            raise ValueError(
+                f"--max_samples must be between 1 and {len(tokens)}, "
+                f"got {arguments.max_samples}"
+            )
+        tokens = tokens[: arguments.max_samples]
+        LOGGER.warning("SMOKE TEST: predicting only %d sequences", len(tokens))
+
     output = Path(arguments.out) or PREDICTIONS_DIR / f"marbert_{arguments.split}.jsonl"
     all_records: list[dict[str, Any]] = []
     for batch in make_prediction_batches(
-        dataset[arguments.split]["tokens"],
+        tokens,
         tokenizer,
         batch_size=batch_size,
         max_len=max_len,

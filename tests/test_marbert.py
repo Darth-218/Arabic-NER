@@ -10,8 +10,16 @@ import json
 from pathlib import Path
 from typing import Any
 
+from src.approach_4_marbert.predict import (
+    build_parser as predict_parser,
+)
 from src.approach_4_marbert.predict import build_prediction_records, write_jsonl
-from src.approach_4_marbert.train import DEFAULTS, build_parser, resolve_config
+from src.approach_4_marbert.train import (
+    DEFAULTS,
+    build_parser,
+    limit_split,
+    resolve_config,
+)
 from src.common.config import IGNORE_INDEX, LABEL2ID, PROJECT_ROOT
 from src.data_utils import (
     align_labels_with_tokens,
@@ -21,6 +29,7 @@ from src.data_utils import (
     make_prediction_batches,
     normalize_arabic,
 )
+from src.evaluate import build_parser as evaluate_parser
 from src.results import write_metrics
 
 
@@ -154,6 +163,34 @@ def test_resolve_config_cli_overrides() -> None:
 def test_train_parser_has_canonical_flags() -> None:
     options = {action.dest for action in build_parser()._actions}
     assert {"config", "output_dir", "seed", "epochs", "batch_size", "lr"} <= options
+    assert {"max_train_samples", "max_eval_samples"} <= options
+
+
+class StubSplit(list):
+    """Minimal stand-in for a HF Dataset split."""
+
+    def select(self, indices: list[int]) -> "StubSplit":
+        return StubSplit(self[index] for index in indices)
+
+
+def test_predict_and_evaluate_parsers_have_smoke_flags() -> None:
+    predict_options = {action.dest for action in predict_parser()._actions}
+    evaluate_options = {action.dest for action in evaluate_parser()._actions}
+    assert "max_samples" in predict_options
+    assert {"max_samples", "predictions", "out"} <= evaluate_options
+
+
+def test_limit_split_smoke_flags() -> None:
+    split = StubSplit([0, 1, 2, 3, 4])
+    assert limit_split(split, None, "train") is split
+    assert limit_split(split, 2, "train") == [0, 1]
+    for bad in (0, -1, 6):
+        try:
+            limit_split(split, bad, "train")
+        except ValueError:
+            pass
+        else:
+            raise AssertionError(f"limit_split should reject {bad}")
 
 
 def test_write_metrics_schema(tmp_path: Path) -> None:
