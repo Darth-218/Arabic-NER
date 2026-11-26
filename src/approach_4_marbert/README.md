@@ -25,6 +25,21 @@ python src/evaluate.py --model marbert --split test --config configs/marbert.yam
 python src/approach_4_marbert/hparam_search.py --dry-run
 ```
 
+## Compute / reproducibility
+
+Per TL guidance (Nov 2026): **run locally, using the scripts in this repo — not
+notebooks.** Cloud execution is allowed, but only with these same scripts kept in
+the repository, so `main` remains the single source of truth.
+
+The commands above work as-is from the repo root after
+`pip install -r requirements.txt`. CPU is supported (the smoke test was verified
+on CPU), but a full 3-epoch run over 20k sequences takes several hours; a GPU
+simply makes the same commands faster — no code changes are needed.
+
+If you do run in Colab, clone this repo there, install `requirements.txt`, and
+execute the exact same commands. Commit any script change back to this branch;
+do not create a separate training notebook.
+
 ### Smoke test (before any full run)
 
 All three entry points accept a matching sample limit so the plumbing can be
