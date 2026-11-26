@@ -2,7 +2,39 @@
 
 Owner: Member 4 (`@ahmedmaboud`).
 
-- `train.py` — fine-tuning CLI (#31)
-- `predict.py` — canonical predictions (#33)
+## Files
 
-Uses shared dataloaders/evaluation/results; see `ROADMAP.md` §2.4.
+| File | Issue | Purpose |
+| :--- | :--- | :--- |
+| `train.py` | 6.1, 6.2 | Fine-tuning CLI; canonical flags from `ROADMAP.md` §2.4 |
+| `predict.py` | 6.4 | Canonical JSONL predictions with one tag per word |
+| `hparam_search.py` | 6.3 | Optional small grid runner (`--dry-run` to preview) |
+| `configs/marbert.yaml` | 6.2 | Hyperparameters and model checkpoint (single source of truth) |
+
+Reports: `reports/phase1/marbert_section.md` (6.5),
+`reports/analysis/marbert_error_analysis.md` (6.4),
+`reports/analysis/marbert_hparam_search.md` (6.3).
+
+## Commands
+
+```bash
+python src/approach_4_marbert/train.py --config configs/marbert.yaml --epochs 3 --batch_size 16
+python src/approach_4_marbert/predict.py --model_dir results/models/marbert --split test \
+  --out results/predictions/marbert_test.jsonl
+python src/evaluate.py --model marbert --split test --config configs/marbert.yaml
+python src/approach_4_marbert/hparam_search.py --dry-run
+```
+
+Uses the shared loader, data utilities, evaluation and results writer — it does
+**not** reimplement tokenization, alignment or metrics.
+
+## Note on the temporary shared harness
+
+`data/load_data.py`, `src/data_utils.py`, `src/evaluate.py`, `src/results.py`
+and `src/compare.py` are currently minimal stand-ins created so this approach
+can run before Member 1 merges Epic 1/2. They are explicitly marked as M1-owned
+placeholders and must be reviewed/replaced by M1. This approach imports only
+their documented public functions, so no M4 code changes are needed then.
+
+`hparam_search.py` is an addition to the canonical tree in §2.1 and should be
+acknowledged in `ROADMAP.md` by M1 before merging (§2 "do not deviate").
