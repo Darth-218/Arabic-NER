@@ -57,6 +57,7 @@ arabic-ner/
 │   ├── evaluate.py             # 2.1–2.2 seqeval metrics + per-class report
 │   ├── results.py              # 2.3 unified results writer + table generator
 │   ├── compare.py              # 7.1 aggregate + comparison table
+│   ├── baseline.py             # 2.4 all-O floor predictions/metrics
 │   ├── approach_1_crf/
 │   │   ├── __init__.py
 │   │   ├── features.py         # 3.1 feature extraction
@@ -192,6 +193,7 @@ Canonical model identifiers: **`crf`, `mbert`, `arabert`, `marbert`**.
 make install-data   # pip install -r requirements-data.txt (data-only)
 make install-cpu    # pip install -r requirements-cpu.txt (modeling, CPU torch)
 make install-gpu    # pip install -r requirements-gpu.txt (modeling, CUDA torch)
+make baseline       # all-O floor: results/metrics/baseline.json
 make data        # python data/load_data.py
 make train M=crf    # python src/approach_1_crf/train.py --config configs/crf.yaml
 make predict M=crf
