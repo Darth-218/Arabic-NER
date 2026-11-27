@@ -9,11 +9,14 @@ owner: member_3
 model_name: aubmindlab/bert-base-arabertv02
 cache_dir: data/raw
 
-epochs: 3
+# Tuned in issue 5.3 on the validation split: 5 trials, best F1 0.9197 with
+# lr 5e-5 / 4 epochs / max_len 128 (baseline 0.9129 at lr 3e-5 / 3 epochs).
+# Search log: reports/analysis/arabert_hparam_search.{json,md}
+epochs: 4
 batch_size: 8
 eval_batch_size: 16
 gradient_accumulation_steps: 2  # effective batch size 16 on a 4 GB GPU
-lr: 3.0e-5
+lr: 5.0e-5
 weight_decay: 0.01
 warmup_ratio: 0.1
 max_len: 128

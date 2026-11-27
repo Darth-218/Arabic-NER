@@ -282,8 +282,15 @@ def make_trainer(
     config: Mapping[str, Any],
     train_loader: Any,
     eval_loader: Any,
+    *,
+    save_checkpoints: bool = True,
 ) -> Any:
-    """Create a Hugging Face Trainer with reproducible, comparable settings."""
+    """Create a Hugging Face Trainer with reproducible, comparable settings.
+
+    ``save_checkpoints=False`` is used by ``hparam_search.py``: a trial only needs
+    its validation score, so writing half a gigabyte of weights per grid point
+    would just waste disk and time.
+    """
     import inspect
     import math
 
@@ -299,11 +306,6 @@ def make_trainer(
         "learning_rate": float(config["lr"]),
         "weight_decay": float(config["weight_decay"]),
         "optim": "adamw_torch",  # works on CPU and GPU across versions
-        "save_strategy": "epoch",
-        "save_total_limit": 2,
-        "load_best_model_at_end": True,
-        "metric_for_best_model": "eval_f1",
-        "greater_is_better": True,
         "logging_steps": 50,
         "report_to": "none",
         "remove_unused_columns": False,
@@ -311,6 +313,18 @@ def make_trainer(
         "bf16": precision == "bf16",
         "fp16": precision == "fp16",
     }
+    if save_checkpoints:
+        arguments.update(
+            {
+                "save_strategy": "epoch",
+                "save_total_limit": 2,
+                "load_best_model_at_end": True,
+                "metric_for_best_model": "eval_f1",
+                "greater_is_better": True,
+            }
+        )
+    else:
+        arguments["save_strategy"] = "no"
     # transformers 5.x replaced warmup_ratio with warmup_steps; translate the
     # ratio into steps so configs/arabert.yaml stays compatible with both.
     parameters = inspect.signature(TrainingArguments.__init__).parameters
