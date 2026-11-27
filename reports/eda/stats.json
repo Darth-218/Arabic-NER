@@ -1,0 +1,204 @@
+{
+  "splits": {
+    "validation": {
+      "sequences": 10000,
+      "tokens": 64291,
+      "expected_sequences": 10000,
+      "label_counts": {
+        "O": 26334,
+        "B-PER": 3815,
+        "I-PER": 7806,
+        "B-ORG": 3596,
+        "I-ORG": 9708,
+        "B-LOC": 3856,
+        "I-LOC": 9176
+      },
+      "entity_spans": {
+        "PER": 3815,
+        "ORG": 3596,
+        "LOC": 3856
+      },
+      "length": {
+        "count": 10000,
+        "mean": 6.43,
+        "median": 5.0,
+        "p95": 12.0,
+        "p99": 22.0,
+        "max": 51
+      }
+    },
+    "test": {
+      "sequences": 10000,
+      "tokens": 64347,
+      "expected_sequences": 10000,
+      "label_counts": {
+        "O": 26033,
+        "B-PER": 3850,
+        "I-PER": 7937,
+        "B-ORG": 3629,
+        "I-ORG": 10045,
+        "B-LOC": 3780,
+        "I-LOC": 9073
+      },
+      "entity_spans": {
+        "PER": 3850,
+        "ORG": 3629,
+        "LOC": 3780
+      },
+      "length": {
+        "count": 10000,
+        "mean": 6.43,
+        "median": 5.0,
+        "p95": 12.0,
+        "p99": 21.0,
+        "max": 53
+      }
+    },
+    "train": {
+      "sequences": 20000,
+      "tokens": 129184,
+      "expected_sequences": 20000,
+      "label_counts": {
+        "O": 53149,
+        "B-PER": 7539,
+        "I-PER": 15422,
+        "B-ORG": 7183,
+        "I-ORG": 19550,
+        "B-LOC": 7779,
+        "I-LOC": 18562
+      },
+      "entity_spans": {
+        "PER": 7539,
+        "ORG": 7183,
+        "LOC": 7779
+      },
+      "length": {
+        "count": 20000,
+        "mean": 6.46,
+        "median": 5.0,
+        "p95": 12.0,
+        "p99": 22.0,
+        "max": 63
+      }
+    }
+  },
+  "vocabulary": {
+    "train_size": 26516,
+    "oov": {
+      "validation": {
+        "train_vocab_size": 26516,
+        "train_tokens": 129184,
+        "tokens": 64291,
+        "oov_tokens": 8797,
+        "oov_rate": 0.1368,
+        "rare_tokens": 17524,
+        "rare_share": 0.1357
+      },
+      "test": {
+        "train_vocab_size": 26516,
+        "train_tokens": 129184,
+        "tokens": 64347,
+        "oov_tokens": 8827,
+        "oov_rate": 0.1372,
+        "rare_tokens": 17524,
+        "rare_share": 0.1357
+      }
+    },
+    "rare": {
+      "count": 17524,
+      "share": 0.6609
+    },
+    "top_tokens": [
+      [
+        "تحويل",
+        10069
+      ],
+      [
+        "(",
+        6882
+      ],
+      [
+        ")",
+        6875
+      ],
+      [
+        ".",
+        3815
+      ],
+      [
+        "''",
+        3648
+      ],
+      [
+        "'",
+        2646
+      ],
+      [
+        "في",
+        2076
+      ],
+      [
+        "بن",
+        1062
+      ],
+      [
+        "مقاطعة",
+        1050
+      ],
+      [
+        "من",
+        956
+      ],
+      [
+        "عبد",
+        835
+      ],
+      [
+        "لكرة",
+        623
+      ],
+      [
+        "هي",
+        533
+      ],
+      [
+        "محمد",
+        522
+      ],
+      [
+        "القدم",
+        506
+      ],
+      [
+        "الدوري",
+        492
+      ],
+      [
+        "له",
+        450
+      ],
+      [
+        "الملحق",
+        422
+      ],
+      [
+        "الكويكبات",
+        421
+      ],
+      [
+        "وفق",
+        420
+      ]
+    ]
+  },
+  "exact_sequence_overlap": {
+    "validation<->test": 911,
+    "validation<->train": 1387,
+    "test<->train": 1454
+  },
+  "word_jaccard": {
+    "validation<->test": 0.2451,
+    "validation<->train": 0.2409,
+    "test<->train": 0.2442
+  }
+}

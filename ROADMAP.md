@@ -45,7 +45,7 @@ Approaches 3–6 may run in parallel once the harness (Epic 2) is green.
 arabic-ner/
 ├── data/
 │   ├── load_data.py            # 1.1 WikiANN loader (single entry point for data)
-│   ├── eda.ipynb               # 1.2 EDA notebook
+│   ├── eda.py                  # 1.2 EDA script (figures + summary)
 │   └── README.md               # dataset card (source, splits, license)
 ├── src/
 │   ├── common/

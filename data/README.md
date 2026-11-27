@@ -13,7 +13,7 @@ Dataset card and loading entry point for the Arabic WikiANN data.
 | File | Purpose | Issue |
 | :--- | :--- | :--- |
 | `load_data.py` | Canonical loader `load_arabic_wikiann()` | #5 (1.1) |
-| `eda.ipynb` | Exploratory data analysis | #6 (1.2) |
+| `eda.py` | Exploratory data analysis (script, figures + summary) | #6 (1.2) |
 | `quality_report.py` | Duplicates / leakage / label coverage | #10 (1.6) |
 
 ## Rules

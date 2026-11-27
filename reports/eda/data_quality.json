@@ -1,0 +1,469 @@
+{
+  "splits": {
+    "validation": {
+      "sequences": 10000,
+      "tokens": 64291,
+      "all_O_sequences": 0,
+      "token_tag_mismatches": 0,
+      "max_length": 51,
+      "entity_presence": {
+        "PER": 3455,
+        "ORG": 3413,
+        "LOC": 3374
+      }
+    },
+    "test": {
+      "sequences": 10000,
+      "tokens": 64347,
+      "all_O_sequences": 0,
+      "token_tag_mismatches": 0,
+      "max_length": 53,
+      "entity_presence": {
+        "PER": 3507,
+        "ORG": 3439,
+        "LOC": 3294
+      }
+    },
+    "train": {
+      "sequences": 20000,
+      "tokens": 129184,
+      "all_O_sequences": 0,
+      "token_tag_mismatches": 0,
+      "max_length": 63,
+      "entity_presence": {
+        "PER": 6870,
+        "ORG": 6844,
+        "LOC": 6803
+      }
+    }
+  },
+  "duplicates": {
+    "exact": {
+      "within": {
+        "validation": {
+          "duplicate_groups": 503,
+          "rows_in_duplicate_groups": 1184
+        },
+        "test": {
+          "duplicate_groups": 540,
+          "rows_in_duplicate_groups": 1246
+        },
+        "train": {
+          "duplicate_groups": 1517,
+          "rows_in_duplicate_groups": 3812
+        }
+      },
+      "cross": {
+        "validation<->test": {
+          "groups": 911,
+          "pairs": 2398,
+          "examples": [
+            {
+              "validation": 2,
+              "test": 7308,
+              "tokens": [
+                "اللعبة",
+                "من",
+                "نشر",
+                "أكتيفجن",
+                "."
+              ]
+            },
+            {
+              "validation": 6,
+              "test": 3726,
+              "tokens": [
+                "تحويل",
+                "فيليم",
+                "ألكساندر",
+                "(",
+                "ملك",
+                "هولندا",
+                ")"
+              ]
+            },
+            {
+              "validation": 12,
+              "test": 7034,
+              "tokens": [
+                "ذو",
+                "الفقار",
+                "علي",
+                "بوتو"
+              ]
+            },
+            {
+              "validation": 13,
+              "test": 7128,
+              "tokens": [
+                "لعب",
+                "مع",
+                "منتخب",
+                "اليونان",
+                "لكرة",
+                "القدم",
+                "."
+              ]
+            },
+            {
+              "validation": 32,
+              "test": 2354,
+              "tokens": [
+                "الكنيسة",
+                "القبطية",
+                "الأرثوذكسية"
+              ]
+            }
+          ]
+        },
+        "validation<->train": {
+          "groups": 1387,
+          "pairs": 4980,
+          "examples": [
+            {
+              "validation": 6,
+              "train": 456,
+              "tokens": [
+                "تحويل",
+                "فيليم",
+                "ألكساندر",
+                "(",
+                "ملك",
+                "هولندا",
+                ")"
+              ]
+            },
+            {
+              "validation": 18,
+              "train": 11242,
+              "tokens": [
+                "'",
+                "''",
+                "درو",
+                "باريمور",
+                "''",
+                "'"
+              ]
+            },
+            {
+              "validation": 28,
+              "train": 2325,
+              "tokens": [
+                "محمد",
+                "بن",
+                "جابر",
+                "بن",
+                "سنان",
+                "البتاني"
+              ]
+            },
+            {
+              "validation": 29,
+              "train": 8070,
+              "tokens": [
+                "تحويل",
+                "حبيب",
+                "عبد",
+                "الرب",
+                "سروري"
+              ]
+            },
+            {
+              "validation": 32,
+              "train": 17893,
+              "tokens": [
+                "الكنيسة",
+                "القبطية",
+                "الأرثوذكسية"
+              ]
+            }
+          ]
+        },
+        "test<->train": {
+          "groups": 1454,
+          "pairs": 4872,
+          "examples": [
+            {
+              "test": 3726,
+              "train": 456,
+              "tokens": [
+                "تحويل",
+                "فيليم",
+                "ألكساندر",
+                "(",
+                "ملك",
+                "هولندا",
+                ")"
+              ]
+            },
+            {
+              "test": 2354,
+              "train": 17893,
+              "tokens": [
+                "الكنيسة",
+                "القبطية",
+                "الأرثوذكسية"
+              ]
+            },
+            {
+              "test": 2411,
+              "train": 6839,
+              "tokens": [
+                "كانت",
+                "تستخدم",
+                "بشكل",
+                "أساسي",
+                "من",
+                "قبل",
+                "سلاح",
+                "الجو",
+                "الملكي",
+                "."
+              ]
+            },
+            {
+              "test": 5777,
+              "train": 4670,
+              "tokens": [
+                "تحويل",
+                "أغسطس",
+                "(",
+                "إمبراطور",
+                ")"
+              ]
+            },
+            {
+              "test": 6461,
+              "train": 6121,
+              "tokens": [
+                "تحويل",
+                "غازي",
+                "عبد",
+                "الرحمن",
+                "القصيبي"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "normalized": {
+      "within": {
+        "validation": {
+          "duplicate_groups": 503,
+          "rows_in_duplicate_groups": 1184
+        },
+        "test": {
+          "duplicate_groups": 541,
+          "rows_in_duplicate_groups": 1248
+        },
+        "train": {
+          "duplicate_groups": 1519,
+          "rows_in_duplicate_groups": 3816
+        }
+      },
+      "cross": {
+        "validation<->test": {
+          "groups": 911,
+          "pairs": 2398,
+          "examples": [
+            {
+              "validation": 2,
+              "test": 7308,
+              "tokens": [
+                "اللعبة",
+                "من",
+                "نشر",
+                "اكتيفجن",
+                "."
+              ]
+            },
+            {
+              "validation": 6,
+              "test": 3726,
+              "tokens": [
+                "تحويل",
+                "فيليم",
+                "الكساندر",
+                "(",
+                "ملك",
+                "هولندا",
+                ")"
+              ]
+            },
+            {
+              "validation": 12,
+              "test": 7034,
+              "tokens": [
+                "ذو",
+                "الفقار",
+                "علي",
+                "بوتو"
+              ]
+            },
+            {
+              "validation": 13,
+              "test": 7128,
+              "tokens": [
+                "لعب",
+                "مع",
+                "منتخب",
+                "اليونان",
+                "لكرة",
+                "القدم",
+                "."
+              ]
+            },
+            {
+              "validation": 32,
+              "test": 2354,
+              "tokens": [
+                "الكنيسة",
+                "القبطية",
+                "الارثوذكسية"
+              ]
+            }
+          ]
+        },
+        "validation<->train": {
+          "groups": 1389,
+          "pairs": 4985,
+          "examples": [
+            {
+              "validation": 6,
+              "train": 456,
+              "tokens": [
+                "تحويل",
+                "فيليم",
+                "الكساندر",
+                "(",
+                "ملك",
+                "هولندا",
+                ")"
+              ]
+            },
+            {
+              "validation": 18,
+              "train": 11242,
+              "tokens": [
+                "'",
+                "''",
+                "درو",
+                "باريمور",
+                "''",
+                "'"
+              ]
+            },
+            {
+              "validation": 28,
+              "train": 2325,
+              "tokens": [
+                "محمد",
+                "بن",
+                "جابر",
+                "بن",
+                "سنان",
+                "البتاني"
+              ]
+            },
+            {
+              "validation": 29,
+              "train": 8070,
+              "tokens": [
+                "تحويل",
+                "حبيب",
+                "عبد",
+                "الرب",
+                "سروري"
+              ]
+            },
+            {
+              "validation": 32,
+              "train": 17893,
+              "tokens": [
+                "الكنيسة",
+                "القبطية",
+                "الارثوذكسية"
+              ]
+            }
+          ]
+        },
+        "test<->train": {
+          "groups": 1454,
+          "pairs": 4872,
+          "examples": [
+            {
+              "test": 3726,
+              "train": 456,
+              "tokens": [
+                "تحويل",
+                "فيليم",
+                "الكساندر",
+                "(",
+                "ملك",
+                "هولندا",
+                ")"
+              ]
+            },
+            {
+              "test": 2354,
+              "train": 17893,
+              "tokens": [
+                "الكنيسة",
+                "القبطية",
+                "الارثوذكسية"
+              ]
+            },
+            {
+              "test": 2411,
+              "train": 6839,
+              "tokens": [
+                "كانت",
+                "تستخدم",
+                "بشكل",
+                "اساسي",
+                "من",
+                "قبل",
+                "سلاح",
+                "الجو",
+                "الملكي",
+                "."
+              ]
+            },
+            {
+              "test": 5777,
+              "train": 4670,
+              "tokens": [
+                "تحويل",
+                "اغسطس",
+                "(",
+                "امبراطور",
+                ")"
+              ]
+            },
+            {
+              "test": 6461,
+              "train": 6121,
+              "tokens": [
+                "تحويل",
+                "غازي",
+                "عبد",
+                "الرحمن",
+                "القصيبي"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "bio_errors": {
+    "validation": 0,
+    "test": 0,
+    "train": 0
+  },
+  "leakage": {
+    "exact_cross_split_pairs": 12250,
+    "normalized_cross_split_pairs": 12255
+  }
+}
