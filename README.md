@@ -106,4 +106,4 @@ Each member is responsible for training and evaluating their specific model. Ple
 | Classical | CRF | - | - | - |
 | Multilingual | mBERT | - | - | - |
 | Arabic Transformer | AraBERT | - | - | - |
-| Advanced Arabic | MARBERT | - | - | - |
+| Advanced Arabic | MARBERT | 0.8889 | 0.8960 | 0.8924 |

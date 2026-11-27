@@ -1,0 +1,54 @@
+{
+  "model": "marbert",
+  "approach": "advanced_arabic_transformer",
+  "owner": "member_4",
+  "split": "validation",
+  "precision": 0.8939,
+  "recall": 0.8999,
+  "f1": 0.8969,
+  "per_entity": {
+    "PER": {
+      "precision": 0.9231175693527081,
+      "recall": 0.9158584534731323,
+      "f1": 0.9194736842105263,
+      "support": 3815
+    },
+    "ORG": {
+      "precision": 0.8465078505684894,
+      "recall": 0.8695773081201335,
+      "f1": 0.8578875171467765,
+      "support": 3596
+    },
+    "LOC": {
+      "precision": 0.910455486542443,
+      "recall": 0.9123443983402489,
+      "f1": 0.9113989637305699,
+      "support": 3856
+    }
+  },
+  "config": {
+    "model": "marbert",
+    "approach": "advanced_arabic_transformer",
+    "owner": "member_4",
+    "model_name": "UBC-NLP/MARBERT",
+    "cache_dir": "data/raw",
+    "epochs": 3,
+    "batch_size": 16,
+    "eval_batch_size": 32,
+    "lr": 2e-05,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.06,
+    "max_len": 128,
+    "seed": 42,
+    "fp16": false,
+    "label_all_subwords": false,
+    "normalization": {
+      "strip_diacritics": true,
+      "remove_tatweel": true,
+      "normalize_alef": true,
+      "normalize_ya": true
+    },
+    "output_dir": "results/models/marbert"
+  },
+  "timestamp": "2026-11-27T09:53:06.987353+00:00"
+}

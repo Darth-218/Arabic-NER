@@ -1,0 +1,32 @@
+# Member 4 (Ahmed Maboud) — MARBERT hyperparameters (issue 6.2)
+# train.py reads this file; CLI flags override individual values when passed.
+model: marbert
+approach: advanced_arabic_transformer
+owner: member_4
+
+# UBC-NLP/MARBERT: BERT-base architecture (~163M params) pretrained on ~1B
+# Arabic tweets (MSA + dialectal Arabic). An alternative for MSA-only text is
+# UBC-NLP/MARBERTv2, but the comparative study fixes this checkpoint so results
+# stay comparable with M2's mBERT and M3's AraBERT.
+model_name: UBC-NLP/MARBERT
+cache_dir: data/raw
+
+epochs: 3
+batch_size: 16
+eval_batch_size: 32
+lr: 2.0e-5
+weight_decay: 0.01
+warmup_ratio: 0.06
+max_len: 128  # matches MARBERT's original pre-training sequence length
+
+seed: 42
+fp16: false
+label_all_subwords: false  # only the first subword of a word carries its label
+
+normalization:
+  strip_diacritics: true
+  remove_tatweel: true
+  normalize_alef: true
+  normalize_ya: true
+
+output_dir: results/models/marbert
