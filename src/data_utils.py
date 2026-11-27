@@ -1,12 +1,9 @@
-"""TEMPORARY PLACEHOLDER — OWNED BY MEMBER 1 (PM).
+"""Canonical tokenization / alignment helpers (ROADMAP.md §2.2, issues 1.3–1.5).
 
-Do not treat this as finished M1 work. It exists only so Member 4's MARBERT
-pipeline can run locally before Epic 1 is merged. Member 1 must review/replace
-this file; the function names and behaviours here implement the canonical
-subword contract from ROADMAP.md §2.2 / issue 1.4.
-
-IMPORTANT: heavy ML imports are deliberately lazy so these pure helpers can be
-unit-tested offline with a stub tokenizer (see tests/README.md).
+`align_labels` and `build_dataloaders` are the public aliases used by the
+approach scripts; the longer names remain available for readability. Heavy ML
+imports are deliberately lazy so the pure helpers can be unit-tested offline
+with a stub tokenizer (see tests/README.md).
 """
 
 from __future__ import annotations
@@ -286,3 +283,8 @@ def make_prediction_batches(
             buffer = []
     if buffer:
         yield collate_prediction_batch(buffer, tokenizer.pad_token_id)
+
+
+# Public contract aliases (review request on PR #43).
+align_labels = align_labels_with_tokens
+build_dataloaders = make_token_classification_dataloader
