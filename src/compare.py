@@ -1,7 +1,7 @@
-"""TEMPORARY PLACEHOLDER — OWNED BY MEMBER 1 (PM).
+"""Aggregate canonical metrics and regenerate the README table (issue 7.1).
 
-Minimal aggregator so `make compare` works before Epic 7 is implemented.
-Reads only canonical metrics files and regenerates the README table.
+Reads only validated `results/metrics/<model>.json` files, so incomplete or
+malformed artifacts fail loudly instead of producing a misleading table.
 """
 
 from __future__ import annotations

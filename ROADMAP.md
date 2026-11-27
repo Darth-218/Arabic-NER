@@ -70,7 +70,8 @@ arabic-ner/
 │   │   └── predict.py
 │   └── approach_4_marbert/
 │       ├── train.py
-│       └── predict.py
+│       ├── predict.py
+│       └── hparam_search.py    # optional 3+k-run grid (accepted PR #43)
 ├── configs/
 │   ├── crf.yaml                # per-approach hyperparameters
 │   ├── mbert.yaml
@@ -113,18 +114,29 @@ ID2LABEL = {i: label for label, i in LABEL2ID.items()}
 IGNORE_INDEX = -100  # subword tokens that must be ignored by the loss/metrics
 ```
 
+**Normalization:** Arabic normalization (diacritics, tatweel, alef/ya variants)
+is configurable per approach in `configs/<model>.yaml` and applied to **model
+input only**. Word counts are unchanged, so BIO spans stay aligned; prediction
+JSONL always echoes the original WikiANN surface forms (ROADMAP §2.4).
+
 ### 2.3 Canonical dataset object
 
 `data/load_data.py` exposes:
 
 ```python
-def load_arabic_wikiann(cache_dir: str | None = None) -> DatasetDict:
+def load_arabic_wikiann(
+    cache_dir: str | Path | None = None, *, strict: bool = True
+) -> DatasetDict:
     """Returns splits 'train' (20k), 'validation' (10k), 'test' (10k).
     Columns: 'tokens': List[str], 'ner_tags': List[int] (values from LABEL2ID).
+    strict=True fails fast if an upstream split size drifts; smoke tests
+    subsample *after* loading.
     """
 ```
 
-No member may load the dataset any other way.
+No member may load the dataset any other way. Extra WikiANN columns (`langs`,
+`spans`) are dropped by the loader. Non-test metrics default to
+`results/metrics/<model>_<split>.json`; only test results use `<model>.json`.
 
 ### 2.4 Canonical model I/O
 
@@ -184,6 +196,7 @@ make data        # python data/load_data.py
 make train M=crf    # python src/approach_1_crf/train.py --config configs/crf.yaml
 make predict M=crf
 make evaluate M=crf
+make hparam M=marbert   # optional: src/<approach>/hparam_search.py
 make compare     # regenerate results + README table
 ```
 

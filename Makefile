@@ -6,7 +6,7 @@ APPROACH_mbert := approach_2_mbert
 APPROACH_arabert := approach_3_arabert
 APPROACH_marbert := approach_4_marbert
 
-.PHONY: help install install-data install-cpu install-gpu test data eda quality train predict evaluate compare clean
+.PHONY: help install install-data install-cpu install-gpu test data eda quality train predict evaluate hparam compare clean
 
 help:
 	@echo "Arabic NER — available targets"
@@ -21,6 +21,7 @@ help:
 	@echo "  make train  MODEL=crf   Train an approach (crf|mbert|arabert|marbert)"
 	@echo "  make predict MODEL=crf  Predict with a trained approach"
 	@echo "  make evaluate MODEL=crf Evaluate predictions"
+	@echo "  make hparam MODEL=marbert Run the approach's hparam_search.py"
 	@echo "  make compare            Regenerate the comparison table"
 	@echo "  make clean              Remove caches"
 
@@ -55,6 +56,9 @@ predict:
 
 evaluate:
 	$(PY) src/evaluate.py --model $(MODEL)
+
+hparam:
+	$(PY) src/$(APPROACH_$(MODEL))/hparam_search.py --config configs/$(MODEL).yaml
 
 compare:
 	$(PY) src/compare.py
