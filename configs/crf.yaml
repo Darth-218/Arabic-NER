@@ -1,0 +1,31 @@
+# Member 1 (Darth) — classical CRF hyperparameters (issues 3.2–3.4)
+# train.py reads this file; CLI flags override individual values when passed.
+model: crf
+approach: classical
+owner: member_1
+
+# Token normalization is used for features only; predictions always echo the
+# original WikiANN surface forms (ROADMAP §2.2/§2.4).
+normalization:
+  strip_diacritics: true
+  remove_tatweel: true
+  normalize_alef: true
+  normalize_ya: true
+
+# Token-level gazetteer built from TRAIN spans only and saved with the model.
+use_gazetteer: true
+
+algorithm: lbfgs
+c1: 0.1
+c2: 0.1
+max_iterations: 100
+all_possible_transitions: true
+
+# Small validation grid (4 fits). Set tune: false to fit the c1/c2 above once.
+tune: true
+tuning:
+  c1: [0.1, 0.5]
+  c2: [0.05, 0.1]
+
+seed: 42
+output_dir: results/models/crf

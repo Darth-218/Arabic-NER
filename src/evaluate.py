@@ -305,6 +305,11 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="skip the original-surface-form check on prediction tokens",
     )
+    parser.add_argument(
+        "--no-diagnostics",
+        action="store_true",
+        help="skip confusion-matrix/classification-report export (smoke runs)",
+    )
     return parser
 
 
@@ -318,5 +323,6 @@ if __name__ == "__main__":
         max_samples=arguments.max_samples,
         predictions=arguments.predictions,
         check_tokens=not arguments.no_token_check,
+        diagnostics=not arguments.no_diagnostics,
     )
     print(json.dumps(scores, indent=2))

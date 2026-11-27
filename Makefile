@@ -6,7 +6,7 @@ APPROACH_mbert := approach_2_mbert
 APPROACH_arabert := approach_3_arabert
 APPROACH_marbert := approach_4_marbert
 
-.PHONY: help install install-data install-cpu install-gpu test data eda quality train predict evaluate hparam compare clean
+.PHONY: help install install-data install-cpu install-gpu baseline test data eda quality train predict evaluate hparam compare clean
 
 help:
 	@echo "Arabic NER — available targets"
@@ -14,6 +14,7 @@ help:
 	@echo "  make install-cpu        Install full CPU env (incl. torch)"
 	@echo "  make install-gpu        Install full CUDA env (incl. torch)"
 	@echo "  make install            Alias for install-data"
+	@echo "  make baseline           All-O baseline predictions + metrics"
 	@echo "  make test               Run the test suite"
 	@echo "  make data               Load/cache the WikiANN ar dataset"
 	@echo "  make eda                Execute the EDA notebook"
@@ -35,6 +36,9 @@ install-cpu:
 
 install-gpu:
 	$(PY) -m pip install -r requirements-gpu.txt
+
+baseline:
+	$(PY) src/baseline.py
 
 test:
 	$(PY) -m pytest
