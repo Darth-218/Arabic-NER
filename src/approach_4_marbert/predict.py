@@ -47,6 +47,18 @@ def load_config(path: str | Path | None) -> dict[str, Any]:
     return data
 
 
+def original_tokens_for_batch(
+    original_tokens: Sequence[Sequence[str]], ids: Sequence[Any]
+) -> list[list[str]]:
+    """Select the untouched tokens that match a batch of ids (ROADMAP §2.4).
+
+    The model input is normalized by `make_prediction_batches`, but prediction
+    files must echo the original surface forms. Word indices are unchanged by
+    normalization, so the batch ids are safe to use for this lookup.
+    """
+    return [list(original_tokens[int(example_id)]) for example_id in ids]
+
+
 def build_prediction_records(
     ids: Sequence[Any],
     tokens_per_example: Sequence[Sequence[str]],
@@ -141,6 +153,9 @@ def predict(arguments: argparse.Namespace) -> Path:
         raise ValueError(f"Dataset has no {arguments.split!r} split")
 
     tokens = dataset[arguments.split]["tokens"]
+    # Keep the raw surface forms for the output JSONL; only the model input is
+    # normalized inside make_prediction_batches.
+    original_tokens = list(tokens)
     if arguments.max_samples is not None:
         if arguments.max_samples <= 0 or arguments.max_samples > len(tokens):
             raise ValueError(
@@ -148,6 +163,7 @@ def predict(arguments: argparse.Namespace) -> Path:
                 f"got {arguments.max_samples}"
             )
         tokens = tokens[: arguments.max_samples]
+        original_tokens = original_tokens[: arguments.max_samples]
         LOGGER.warning("SMOKE TEST: predicting only %d sequences", len(tokens))
 
     output = Path(arguments.out) or PREDICTIONS_DIR / f"marbert_{arguments.split}.jsonl"
@@ -171,7 +187,7 @@ def predict(arguments: argparse.Namespace) -> Path:
         all_records.extend(
             build_prediction_records(
                 batch["ids"],
-                batch["tokens"],
+                original_tokens_for_batch(original_tokens, batch["ids"]),
                 predicted_ids,
                 batch["word_ids"],
             )

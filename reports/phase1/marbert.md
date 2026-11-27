@@ -41,10 +41,16 @@ classical model and the shared evaluation harness make that comparison fair.
   **first** subword keeps the word's BIO label; the rest get `-100` and are
   ignored by the loss. At prediction time the first subword's guess is mapped
   back to one tag per original word, which is what the evaluator expects.
+- Normalization changes the **model input only**; prediction JSONLs echo the
+  original WikiANN surface forms (ROADMAP §2.4).
 
 ## 4. Training setup
 
 - Checkpoint: `UBC-NLP/MARBERT`, sequence length 128 (matching pre-training).
+  A truncation audit found **0/10,000 test** and **0/10,000 validation**
+  sequences over 128 subword positions (longest encodings 87 and 101), so word
+  coverage is 100%. All transformer approaches should keep this same `max_len`
+  and `truncation=True` policy for a fair comparison.
 - Optimizer setup via Hugging Face `Trainer`: learning rate 2e-5, 3 epochs,
   batch size 16, warmup 6%, weight decay 0.01, seed 42.
 - Best checkpoint is chosen by validation F1; final numbers are computed on the

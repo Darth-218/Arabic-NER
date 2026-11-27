@@ -1,0 +1,29 @@
+{
+  "max_len": 128,
+  "splits": {
+    "test": {
+      "sequences": 10000,
+      "sequences_over_max_len": 0,
+      "sequences_over_max_len_pct": 0.0,
+      "sequences_with_truncated_words": 0,
+      "sequences_with_truncated_words_pct": 0.0,
+      "total_original_words": 64347,
+      "covered_words": 64347,
+      "lost_words": 0,
+      "word_coverage_pct": 100.0,
+      "longest_full_encoding": 87
+    },
+    "validation": {
+      "sequences": 10000,
+      "sequences_over_max_len": 0,
+      "sequences_over_max_len_pct": 0.0,
+      "sequences_with_truncated_words": 0,
+      "sequences_with_truncated_words_pct": 0.0,
+      "total_original_words": 64291,
+      "covered_words": 64291,
+      "lost_words": 0,
+      "word_coverage_pct": 100.0,
+      "longest_full_encoding": 101
+    }
+  }
+}

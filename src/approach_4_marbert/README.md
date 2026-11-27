@@ -29,6 +29,12 @@ python src/evaluate.py --model marbert --split validation --config configs/marbe
 python src/approach_4_marbert/hparam_search.py --dry-run
 ```
 
+`predict.py` writes the **original** WikiANN tokens in the JSONL; Arabic
+normalization is applied only to the model input. A truncation audit at
+`max_len=128` found 0 over-limit test/validation sequences (longest encodings
+87/101), so no tail words were converted to `O`. Keep this same `max_len` and
+`truncation=True` policy for mBERT and AraBERT when their configs land.
+
 ## Compute / reproducibility
 
 Per TL guidance (Nov 2026): **run locally, using the scripts in this repo — not

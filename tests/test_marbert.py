@@ -13,7 +13,11 @@ from typing import Any
 from src.approach_4_marbert.predict import (
     build_parser as predict_parser,
 )
-from src.approach_4_marbert.predict import build_prediction_records, write_jsonl
+from src.approach_4_marbert.predict import (
+    build_prediction_records,
+    original_tokens_for_batch,
+    write_jsonl,
+)
 from src.approach_4_marbert.train import (
     DEFAULTS,
     build_parser,
@@ -126,6 +130,16 @@ def test_prediction_batches_pad_and_keep_word_ids() -> None:
     assert batch["word_ids"][0] == [0, 0, 1, 2, 2]
     assert len(batch["input_ids"][0]) == len(batch["input_ids"][1])
     assert batch["attention_mask"][1][-1] == 0  # padding position
+
+
+def test_original_tokens_for_batch_preserves_surface_forms() -> None:
+    """Normalization may feed the model, but output tokens stay original."""
+    original = [["أحمد", "في", "القاهرة"], ["شركة", "أإآ"]]
+    assert original_tokens_for_batch(original, [1, 0]) == [
+        ["شركة", "أإآ"],
+        ["أحمد", "في", "القاهرة"],
+    ]
+    assert original[0] == ["أحمد", "في", "القاهرة"]  # input list unchanged
 
 
 def test_build_prediction_records() -> None:

@@ -30,6 +30,44 @@ PER is the easiest class and ORG the hardest. The ORG gap is driven mostly by
 long or transliterated organization names and by ORG/LOC confusion, not by a
 failure to detect short, common organizations.
 
+## Truncation coverage and comparison fairness
+
+Computed with the same MARBERT fast tokenizer, the normalization settings in
+`configs/marbert.yaml`, and `truncation=True, max_length=128`. "Covered words"
+means `max(word_ids) + 1`; any tail beyond that would be emitted as `O` by
+`align_predictions_to_words`. Raw counts are also saved in
+`reports/analysis/marbert_truncation.json`.
+
+| Split | Sequences | Encodings > 128 | Sequences losing words | Word coverage | Longest full encoding |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| test | 10,000 | 0 (0.0%) | 0 (0.0%) | 64,347 / 64,347 (100.0%) | 87 |
+| validation | 10,000 | 0 (0.0%) | 0 (0.0%) | 64,291 / 64,291 (100.0%) | 101 |
+
+No sequence reaches the limit, so no tail is labelled `O` because of truncation,
+and moving to `max_len=256` or a sliding window would not change these results.
+The agreed fairness policy is: **all transformer approaches use the same
+`max_len=128` with `truncation=True`**. At review time only `configs/marbert.yaml`
+exists on this branch; M2/mBERT and M3/AraBERT must copy the same setting when
+their configs land.
+
+## Prediction surface forms
+
+`predict.py` writes the **original** WikiANN tokens, not the normalized strings
+fed to the model (ROADMAP §2.4). Verification: all 10,000 test prediction rows
+have `tokens` identical to the gold `tokens` (0 mismatches). Normalization
+therefore affects model input only.
+
+## Verification evidence
+
+- Library versions: `torch==2.15.0`, `transformers==5.24.1`,
+  `datasets==5.2.0`, `seqeval==1.2.2`.
+- Prediction row count: 10,000 test and 10,000 validation JSONL records.
+- seqeval test F1: **0.8924** (precision 0.8889, recall 0.8960); validation F1
+  0.8969. Both are in the committed metrics JSON files.
+- `evaluate.py` checks the prediction row count against the gold split and the
+  tag length of every row; both full runs completed without a length-mismatch
+  error, so there are **0 prediction/gold length mismatches**.
+
 ## Confusion patterns to check first
 
 MARBERT was pretrained on about **1 billion Arabic tweets**, so it is strong on
@@ -58,10 +96,10 @@ three of those hypotheses:
 - **ORG → PER** for transliterated company names (`مومويرو كلوفر زد`,
   `جي بي مورجان تشايس`) — MARBERT treats the name as a person.
 - **ORG ↔ LOC** for place names used as organizations (`غوتنبرغ`,
-  `لاسرائيل`) and for a broken multi-token ORG (`غدة تحت الفك السفلي`), where
+  `لإسرائيل`) and for a broken multi-token ORG (`غدة تحت الفك السفلي`), where
   the tail is relabelled LOC.
 - **B- vs I-** errors inside multi-word names (`استوديو حملة`, `سبتة مليلة`,
-  `اور نو ديل`) and one completely missed ORG (`بالنمو الاسي`).
+  `أور نو ديل`) and one completely missed ORG (`بالنمو الأسي`).
 
 ## Example table (10 real disagreements)
 
@@ -69,14 +107,14 @@ three of those hypotheses:
 | :--- | :--- | :--- | :--- | :--- |
 | 18 | مومويرو كلوفر زد | B-ORG I-ORG I-ORG | B-PER I-PER I-PER | Transliterated company read as a person. |
 | 25 | شركة يونيفرسال استوديو حملة التوزيع | O B-ORG I-ORG O O | O B-ORG O O O | `I-` dropped; multi-word ORG truncated. |
-| 34 | تفكك الاتحاد السوفيتي هذه الاهداف | B-ORG I-ORG I-ORG O O | B-ORG I-ORG I-LOC O O | Last token of the ORG read as a location. |
-| 50 | في الارسال بالنمو الاسي . | O O B-ORG I-ORG O | O O O O O | Whole ORG missed. |
+| 34 | تفكك الاتحاد السوفيتي هذه الأهداف | B-ORG I-ORG I-ORG O O | B-ORG I-ORG I-LOC O O | Last token of the ORG read as a location. |
+| 50 | في الإرسال بالنمو الأسي . | O O B-ORG I-ORG O | O O O O O | Whole ORG missed. |
 | 59 | مدينتي سبتة مليلة المتواجدتين في | O B-LOC B-LOC O O | O B-LOC I-LOC O O | Two adjacent cities merged into one LOC. |
 | 68 | ' '' غوتنبرغ '' ' | O O B-LOC O O | O O B-ORG O O | City name classified as an organization. |
-| 72 | بمواقفه الداعمة لاسرائيل . | O O B-LOC O | O O B-ORG O | Country name labelled ORG. |
+| 72 | بمواقفه الداعمة لإسرائيل . | O O B-LOC O | O O B-ORG O | Country name labelled ORG. |
 | 76 | تقع غدة تحت الفك السفلي . | O B-ORG I-ORG I-ORG I-ORG O | O B-ORG O B-LOC I-LOC O | One ORG split; tail relabelled LOC. |
 | 95 | جي بي مورجان تشايس | B-ORG I-ORG I-ORG I-ORG | B-PER I-PER I-PER I-PER | Company name read as a person. |
-| 113 | اور نو ديل ( النسخة | I-ORG I-ORG B-ORG I-ORG I-ORG | I-ORG I-ORG I-ORG I-ORG I-ORG | `B-ORG` boundary missed inside a long name. |
+| 113 | أور نو ديل ( النسخة | I-ORG I-ORG B-ORG I-ORG I-ORG | I-ORG I-ORG I-ORG I-ORG I-ORG | `B-ORG` boundary missed inside a long name. |
 
 ## What to compare with teammates
 
