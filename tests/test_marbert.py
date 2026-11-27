@@ -29,7 +29,7 @@ from src.data_utils import (
     make_prediction_batches,
     normalize_arabic,
 )
-from src.evaluate import build_parser as evaluate_parser
+from src.evaluate import build_parser as evaluate_parser, compute_metrics
 from src.results import write_metrics
 
 
@@ -191,6 +191,15 @@ def test_limit_split_smoke_flags() -> None:
             pass
         else:
             raise AssertionError(f"limit_split should reject {bad}")
+
+
+def test_compute_metrics_reads_seqeval_f1_score_key() -> None:
+    """seqeval returns 'f1-score'; a wrong key would silently zero every F1."""
+    metrics = compute_metrics([["B-PER", "I-PER", "O"]], [["B-PER", "I-PER", "O"]])
+    assert metrics["precision"] == 1.0
+    assert metrics["recall"] == 1.0
+    assert metrics["f1"] == 1.0
+    assert metrics["per_entity"]["PER"]["f1"] == 1.0
 
 
 def test_write_metrics_schema(tmp_path: Path) -> None:

@@ -1,6 +1,6 @@
 # MARBERT — Hyperparameter Search (issue 6.3)
 
-**Owner:** Member 4 (Ahmed Maboud) · **Status:** plan defined; results pending GPU runs.
+**Owner:** Member 4 (Ahmed Maboud) · **Status:** default setting measured; optional grid not run.
 
 ## Why only three settings
 
@@ -39,12 +39,14 @@ to retrain that setting.
 
 | Run | LR | Epochs | Precision | Recall | F1 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `lr1e5_e2` | 1e-5 | 2 | _pending_ | _pending_ | _pending_ |
-| `lr2e5_e3` | 2e-5 | 3 | _pending_ | _pending_ | _pending_ |
-| `lr3e5_e2` | 3e-5 | 2 | _pending_ | _pending_ | _pending_ |
+| `lr1e5_e2` | 1e-5 | 2 | _not run_ | _not run_ | _not run_ |
+| `lr2e5_e3` | 2e-5 | 3 | 0.8889 | 0.8960 | 0.8924 |
+| `lr3e5_e2` | 3e-5 | 2 | _not run_ | _not run_ | _not run_ |
 
-**Best so far:** not yet measured. The default config uses `lr=2e-5, epochs=3`
-as a reasonable starting point.
+**Best so far:** `lr2e5_e3` with F1 **0.8924** — the default in
+`configs/marbert.yaml`. The other two settings were deliberately not run: each
+full CPU training pass takes about three hours, and the default already gives a
+strong baseline. The helper is kept so the grid can be run later on a GPU.
 
 ## Reproducibility rule
 

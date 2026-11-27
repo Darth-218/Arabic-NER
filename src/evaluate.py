@@ -48,18 +48,23 @@ def compute_metrics(
     report = classification_report(gold_tags, pred_tags, output_dict=True, digits=4)
     summary = report.get("micro avg") or report.get("macro avg") or {}
     per_entity: dict[str, dict[str, float | int]] = {}
+    # seqeval names the F1 key "f1-score" (not "f1"); accept both so a schema
+    # change cannot silently turn every F1 into 0.
+    def f1_score(scores: Mapping[str, Any]) -> float:
+        return float(scores.get("f1-score", scores.get("f1", 0.0)))
+
     for name in ("PER", "ORG", "LOC"):
         scores = report.get(name, {})
         per_entity[name] = {
             "precision": float(scores.get("precision", 0.0)),
             "recall": float(scores.get("recall", 0.0)),
-            "f1": float(scores.get("f1", 0.0)),
+            "f1": f1_score(scores),
             "support": int(scores.get("support", 0)),
         }
     return {
         "precision": float(summary.get("precision", 0.0)),
         "recall": float(summary.get("recall", 0.0)),
-        "f1": float(summary.get("f1", 0.0)),
+        "f1": f1_score(summary),
         "per_entity": per_entity,
     }
 

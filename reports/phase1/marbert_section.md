@@ -52,12 +52,16 @@ classical model and the shared evaluation harness make that comparison fair.
 
 ## 5. Results
 
-_Pending the first full run. Fill from `results/metrics/marbert.json` after
-`train.py → predict.py → evaluate.py`; do not type numbers by hand._
+Numbers below are read from `results/metrics/marbert.json`, produced by
+`train.py → predict.py → evaluate.py` on the full 20k/10k/10k WikiANN splits.
+The saved model is the final epoch checkpoint (`checkpoint-3750`): a temporary
+evaluator bug initially made in-training F1 read as 0, so all checkpoints were
+re-scored after the fix and the best one was promoted to the canonical path.
+See `reports/analysis/marbert_error_analysis.md` for the full breakdown.
 
 | Split | Precision | Recall | F1 | PER F1 | ORG F1 | LOC F1 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| test | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
+| test | 0.8889 | 0.8960 | 0.8924 | 0.9100 | 0.8573 | 0.9087 |
 
 ## 6. Error analysis
 

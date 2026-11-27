@@ -1,6 +1,6 @@
 # MARBERT — Error Analysis (issue 6.4)
 
-**Owner:** Member 4 (Ahmed Maboud) · **Status:** template ready, fill after the first real run.
+**Owner:** Member 4 (Ahmed Maboud) · **Status:** filled from the full test run (F1 0.8924).
 
 ## How to produce the evidence
 
@@ -19,12 +19,16 @@ below; do **not** hand-edit `results/metrics/marbert.json` — it is generated.
 
 | Metric | Value |
 | :--- | :--- |
-| Overall precision | _pending_ |
-| Overall recall | _pending_ |
-| Overall F1 | _pending_ |
-| PER F1 | _pending_ |
-| ORG F1 | _pending_ |
-| LOC F1 | _pending_ |
+| Overall precision | 0.8889 |
+| Overall recall | 0.8960 |
+| Overall F1 | 0.8924 |
+| PER F1 | 0.9100 |
+| ORG F1 | 0.8573 |
+| LOC F1 | 0.9087 |
+
+PER is the easiest class and ORG the hardest. The ORG gap is driven mostly by
+long or transliterated organization names and by ORG/LOC confusion, not by a
+failure to detect short, common organizations.
 
 ## Confusion patterns to check first
 
@@ -46,11 +50,33 @@ as:
 5. **Truncation** — `max_len: 128` matches MARBERT's pre-training length, but a
    long sentence can push later entities off the end; these become `O`.
 
-## Example table (fill with 5–10 real disagreements)
+### What the run actually showed
 
-| # | Tokens | Gold tags | MARBERT tags | What went wrong |
+The ten disagreements below (IDs 18–113 from `marbert_test.jsonl`) confirm
+three of those hypotheses:
+
+- **ORG → PER** for transliterated company names (`مومويرو كلوفر زد`,
+  `جي بي مورجان تشايس`) — MARBERT treats the name as a person.
+- **ORG ↔ LOC** for place names used as organizations (`غوتنبرغ`,
+  `لاسرائيل`) and for a broken multi-token ORG (`غدة تحت الفك السفلي`), where
+  the tail is relabelled LOC.
+- **B- vs I-** errors inside multi-word names (`استوديو حملة`, `سبتة مليلة`,
+  `اور نو ديل`) and one completely missed ORG (`بالنمو الاسي`).
+
+## Example table (10 real disagreements)
+
+| ID | Tokens | Gold tags | MARBERT tags | What went wrong |
 | :--- | :--- | :--- | :--- | :--- |
-| 1 | _pending_ | _pending_ | _pending_ | _pending_ |
+| 18 | مومويرو كلوفر زد | B-ORG I-ORG I-ORG | B-PER I-PER I-PER | Transliterated company read as a person. |
+| 25 | شركة يونيفرسال استوديو حملة التوزيع | O B-ORG I-ORG O O | O B-ORG O O O | `I-` dropped; multi-word ORG truncated. |
+| 34 | تفكك الاتحاد السوفيتي هذه الاهداف | B-ORG I-ORG I-ORG O O | B-ORG I-ORG I-LOC O O | Last token of the ORG read as a location. |
+| 50 | في الارسال بالنمو الاسي . | O O B-ORG I-ORG O | O O O O O | Whole ORG missed. |
+| 59 | مدينتي سبتة مليلة المتواجدتين في | O B-LOC B-LOC O O | O B-LOC I-LOC O O | Two adjacent cities merged into one LOC. |
+| 68 | ' '' غوتنبرغ '' ' | O O B-LOC O O | O O B-ORG O O | City name classified as an organization. |
+| 72 | بمواقفه الداعمة لاسرائيل . | O O B-LOC O | O O B-ORG O | Country name labelled ORG. |
+| 76 | تقع غدة تحت الفك السفلي . | O B-ORG I-ORG I-ORG I-ORG O | O B-ORG O B-LOC I-LOC O | One ORG split; tail relabelled LOC. |
+| 95 | جي بي مورجان تشايس | B-ORG I-ORG I-ORG I-ORG | B-PER I-PER I-PER I-PER | Company name read as a person. |
+| 113 | اور نو ديل ( النسخة | I-ORG I-ORG B-ORG I-ORG I-ORG | I-ORG I-ORG I-ORG I-ORG I-ORG | `B-ORG` boundary missed inside a long name. |
 
 ## What to compare with teammates
 
