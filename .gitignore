@@ -26,8 +26,6 @@ results/models/
 # Local smoke-test artifacts (generated, not canonical results)
 results/metrics/*_smoke.json
 results/predictions/*_smoke*.jsonl
-results/plots/marbert_confusion.json
-results/plots/marbert_classification_report.txt
 
 # OS
 .DS_Store

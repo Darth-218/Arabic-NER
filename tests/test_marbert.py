@@ -193,6 +193,15 @@ def test_limit_split_smoke_flags() -> None:
             raise AssertionError(f"limit_split should reject {bad}")
 
 
+def test_hparam_grid_covers_lr_epochs_batch_size_and_max_len() -> None:
+    from src.approach_4_marbert.hparam_search import GRID
+
+    required = {"lr", "epochs", "batch_size", "max_len"}
+    assert all(required <= set(run) for run in GRID)
+    for knob in required:
+        assert len({run[knob] for run in GRID}) > 1, f"{knob} is not varied"
+
+
 def test_compute_metrics_reads_seqeval_f1_score_key() -> None:
     """seqeval returns 'f1-score'; a wrong key would silently zero every F1."""
     metrics = compute_metrics([["B-PER", "I-PER", "O"]], [["B-PER", "I-PER", "O"]])

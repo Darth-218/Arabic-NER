@@ -59,8 +59,12 @@ evaluator bug initially made in-training F1 read as 0, so all checkpoints were
 re-scored after the fix and the best one was promoted to the canonical path.
 See `reports/analysis/marbert_error_analysis.md` for the full breakdown.
 
+Validation numbers come from `results/metrics/marbert_validation.json`; test
+numbers from `results/metrics/marbert.json`.
+
 | Split | Precision | Recall | F1 | PER F1 | ORG F1 | LOC F1 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| validation | 0.8939 | 0.8999 | 0.8969 | 0.9195 | 0.8579 | 0.9114 |
 | test | 0.8889 | 0.8960 | 0.8924 | 0.9100 | 0.8573 | 0.9087 |
 
 ## 6. Error analysis
@@ -72,7 +76,7 @@ text, so formal multi-word proper names may be harder than colloquial Arabic.
 ## 7. Reproducibility
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-cpu.txt   # or requirements-gpu.txt
 python src/approach_4_marbert/train.py --config configs/marbert.yaml
 python src/approach_4_marbert/predict.py --model_dir results/models/marbert \
   --split test --out results/predictions/marbert_test.jsonl

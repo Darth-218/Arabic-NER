@@ -32,9 +32,9 @@ SUMMARY_PATH = PROJECT_ROOT / "reports" / "analysis" / "marbert_hparam_search.js
 
 # Keep the grid small: every row trains a ~163M-parameter model.
 GRID: list[dict[str, Any]] = [
-    {"name": "lr1e5_e2", "lr": 1e-5, "epochs": 2},
-    {"name": "lr2e5_e3", "lr": 2e-5, "epochs": 3},
-    {"name": "lr3e5_e2", "lr": 3e-5, "epochs": 2},
+    {"name": "lr1e5_e2_bs16_len128", "lr": 1e-5, "epochs": 2, "batch_size": 16, "max_len": 128},
+    {"name": "lr2e5_e3_bs16_len128", "lr": 2e-5, "epochs": 3, "batch_size": 16, "max_len": 128},
+    {"name": "lr3e5_e2_bs32_len64", "lr": 3e-5, "epochs": 2, "batch_size": 32, "max_len": 64},
 ]
 
 
@@ -46,11 +46,15 @@ def commands_for(run: dict[str, Any]) -> list[list[str]]:
         [
             python, str(TRAIN), "--config", str(BASE_CONFIG),
             "--lr", str(run["lr"]), "--epochs", str(run["epochs"]),
+            "--batch_size", str(run["batch_size"]),
+            "--max_len", str(run["max_len"]),
             "--output_dir", str(model_dir),
         ],
         [
             python, str(PREDICT), "--model_dir", str(model_dir),
             "--split", "test", "--config", str(BASE_CONFIG),
+            "--batch_size", str(run["batch_size"]),
+            "--max_len", str(run["max_len"]),
             "--out", str(RESULTS_DIR / "predictions" / "marbert_test.jsonl"),
         ],
         [
@@ -68,7 +72,10 @@ def main(argv: list[str] | None = None) -> int:
 
     if arguments.dry_run:
         for run in GRID:
-            print(f"# {run['name']}: lr={run['lr']}, epochs={run['epochs']}")
+            print(
+                f"# {run['name']}: lr={run['lr']}, epochs={run['epochs']}, "
+                f"batch_size={run['batch_size']}, max_len={run['max_len']}"
+            )
             for command in commands_for(run):
                 print(" ".join(command))
             print()
@@ -94,6 +101,8 @@ def main(argv: list[str] | None = None) -> int:
                 "name": run["name"],
                 "lr": run["lr"],
                 "epochs": run["epochs"],
+                "batch_size": run["batch_size"],
+                "max_len": run["max_len"],
                 "f1": scores["f1"],
                 "precision": scores["precision"],
                 "recall": scores["recall"],
@@ -109,7 +118,8 @@ def main(argv: list[str] | None = None) -> int:
         "best": best,
         "next_step": (
             f"python src/approach_4_marbert/train.py --config configs/marbert.yaml "
-            f"--lr {best['lr']} --epochs {best['epochs']}"
+            f"--lr {best['lr']} --epochs {best['epochs']} "
+            f"--batch_size {best['batch_size']} --max_len {best['max_len']}"
         ),
     }
     SUMMARY_PATH.parent.mkdir(parents=True, exist_ok=True)

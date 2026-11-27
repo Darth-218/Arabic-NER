@@ -8,10 +8,10 @@ Owner: Member 4 (`@ahmedmaboud`).
 | :--- | :--- | :--- |
 | `train.py` | 6.1, 6.2 | Fine-tuning CLI; canonical flags from `ROADMAP.md` §2.4 |
 | `predict.py` | 6.4 | Canonical JSONL predictions with one tag per word |
-| `hparam_search.py` | 6.3 | Optional small grid runner (`--dry-run` to preview) |
+| `hparam_search.py` | 6.3 | Optional 3-run grid over LR, epochs, batch size and max length (`--dry-run` to preview) |
 | `configs/marbert.yaml` | 6.2 | Hyperparameters and model checkpoint (single source of truth) |
 
-Reports: `reports/phase1/marbert_section.md` (6.5),
+Reports: `reports/phase1/marbert.md` (6.5),
 `reports/analysis/marbert_error_analysis.md` (6.4),
 `reports/analysis/marbert_hparam_search.md` (6.3).
 
@@ -22,6 +22,10 @@ python src/approach_4_marbert/train.py --config configs/marbert.yaml --epochs 3 
 python src/approach_4_marbert/predict.py --model_dir results/models/marbert --split test \
   --out results/predictions/marbert_test.jsonl
 python src/evaluate.py --model marbert --split test --config configs/marbert.yaml
+python src/approach_4_marbert/predict.py --model_dir results/models/marbert \
+  --split validation --out results/predictions/marbert_validation.jsonl
+python src/evaluate.py --model marbert --split validation --config configs/marbert.yaml \
+  --out results/metrics/marbert_validation.json
 python src/approach_4_marbert/hparam_search.py --dry-run
 ```
 
@@ -32,11 +36,13 @@ notebooks.** Cloud execution is allowed, but only with these same scripts kept i
 the repository, so `main` remains the single source of truth.
 
 The commands above work as-is from the repo root after
-`pip install -r requirements.txt`. CPU is supported (the smoke test was verified
-on CPU), but a full 3-epoch run over 20k sequences takes several hours; a GPU
-simply makes the same commands faster — no code changes are needed.
+`pip install -r requirements-cpu.txt` (or `requirements-gpu.txt` on a GPU
+machine — `requirements.txt` alone no longer installs PyTorch). CPU is
+supported (the smoke test was verified on CPU), but a full 3-epoch run over 20k
+sequences takes several hours; a GPU simply makes the same commands faster — no
+code changes are needed.
 
-If you do run in Colab, clone this repo there, install `requirements.txt`, and
+If you do run in Colab, clone this repo there, install `requirements-gpu.txt`, and
 execute the exact same commands. Commit any script change back to this branch;
 do not create a separate training notebook.
 
