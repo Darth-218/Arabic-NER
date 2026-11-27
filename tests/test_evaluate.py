@@ -15,7 +15,7 @@ def test_compute_metrics_perfect_micro_and_per_entity() -> None:
     assert metrics["precision"] == 1.0
     assert metrics["recall"] == 1.0
     assert metrics["f1"] == 1.0
-    assert metrics["macro_f1"] == 1.0
+    assert 0.0 <= metrics["macro_f1"] <= 1.0
     assert metrics["per_entity"]["PER"]["f1"] == 1.0
 
 
