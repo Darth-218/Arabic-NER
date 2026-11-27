@@ -272,3 +272,65 @@ def test_build_summary_picks_the_best_validation_score() -> None:
     assert "lr5e5_e3_bs8_len128" in markdown
     assert "validation" in markdown
     assert "OutOfMemoryError" in markdown
+
+
+# --- predictions (issue 5.4) -----------------------------------------------
+
+
+def test_predict_parser_exposes_canonical_flags() -> None:
+    from src.approach_3_arabert.predict import build_parser
+
+    parser = build_parser()
+    dests = {action.dest for action in parser._actions}
+    assert {"model_dir", "split", "out", "config", "batch_size", "max_len"} <= dests
+
+
+def test_default_prediction_path_uses_the_canonical_name() -> None:
+    from src.approach_3_arabert.predict import default_output_path
+
+    path = default_output_path("test")
+    assert path.name == "arabert_test.jsonl"
+    assert path.parent.name == "predictions"
+
+
+def test_prediction_records_have_one_tag_per_original_word() -> None:
+    from src.approach_3_arabert.predict import build_prediction_records
+
+    # Two words; the second splits into two sub-words. [CLS]/[SEP] are None.
+    word_ids = [None, 0, 1, 1, None]
+    predicted_ids = [0, 1, 3, 3, 0]  # O, B-PER, B-ORG, O, O
+    records = build_prediction_records(
+        ids=[7],
+        tokens_per_example=[["محمد", "يعمل"]],
+        predicted_ids_per_example=[predicted_ids],
+        word_ids_per_example=[word_ids],
+    )
+
+    assert len(records) == 1
+    record = records[0]
+    assert record["id"] == 7
+    assert record["tokens"] == ["محمد", "يعمل"]
+    assert len(record["tags"]) == len(record["tokens"])
+    assert record["tags"] == ["B-PER", "B-ORG"]
+
+
+def test_original_tokens_are_returned_untouched_for_the_batch() -> None:
+    from src.approach_3_arabert.predict import original_tokens_for_batch
+
+    original = [["مُحَمَّد", "في"], ["القاهرة", "الكبرى"]]
+    assert original_tokens_for_batch(original, [1, 0]) == [["القاهرة", "الكبرى"], ["مُحَمَّد", "في"]]
+
+
+def test_resolved_config_from_the_model_dir_is_used(tmp_path: Any) -> None:
+    import json as json_module
+
+    from src.approach_3_arabert.predict import resolved_config_for_model
+
+    assert resolved_config_for_model(tmp_path) == {}
+    (tmp_path / "resolved_config.json").write_text(
+        json_module.dumps({"max_len": 96, "normalization": {"strip_diacritics": False}}),
+        encoding="utf-8",
+    )
+    config = resolved_config_for_model(tmp_path)
+    assert config["max_len"] == 96
+    assert config["normalization"] == {"strip_diacritics": False}
