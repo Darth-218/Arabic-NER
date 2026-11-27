@@ -75,17 +75,29 @@ def compute_metrics(
     validate_tags(gold_tags, "gold tags")
 
     # Canonical overall metrics are explicitly micro-averaged over entity spans.
-    micro_precision = float(precision_score(gold_tags, pred_tags, average="micro"))
-    micro_recall = float(recall_score(gold_tags, pred_tags, average="micro"))
-    micro_f1 = float(f1_score(gold_tags, pred_tags, average="micro"))
+    micro_precision = float(
+        precision_score(gold_tags, pred_tags, average="micro", zero_division=0)
+    )
+    micro_recall = float(
+        recall_score(gold_tags, pred_tags, average="micro", zero_division=0)
+    )
+    micro_f1 = float(
+        f1_score(gold_tags, pred_tags, average="micro", zero_division=0)
+    )
     # Macro values are exposed for diagnostics; the canonical metrics JSON keeps
     # only micro overall + per-entity (ROADMAP §2.5).
-    macro_precision = float(precision_score(gold_tags, pred_tags, average="macro"))
-    macro_recall = float(recall_score(gold_tags, pred_tags, average="macro"))
-    macro_f1 = float(f1_score(gold_tags, pred_tags, average="macro"))
+    macro_precision = float(
+        precision_score(gold_tags, pred_tags, average="macro", zero_division=0)
+    )
+    macro_recall = float(
+        recall_score(gold_tags, pred_tags, average="macro", zero_division=0)
+    )
+    macro_f1 = float(
+        f1_score(gold_tags, pred_tags, average="macro", zero_division=0)
+    )
 
     report = classification_report(
-        gold_tags, pred_tags, output_dict=True, digits=4
+        gold_tags, pred_tags, output_dict=True, digits=4, zero_division=0
     )
 
     def f1_value(scores: Mapping[str, Any]) -> float:
