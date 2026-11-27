@@ -103,7 +103,7 @@ Each member is responsible for training and evaluating their specific model. Ple
 
 | Approach | Model | Precision | Recall | F1-Score |
 | :--- | :--- | :--- | :--- | :--- |
-| Classical | CRF | - | - | - |
+| Classical | CRF | 0.8509 | 0.7771 | 0.8123 |
 | Multilingual | mBERT | - | - | - |
 | Arabic Transformer | AraBERT | - | - | - |
 | Advanced Arabic | MARBERT | 0.8889 | 0.8960 | 0.8924 |

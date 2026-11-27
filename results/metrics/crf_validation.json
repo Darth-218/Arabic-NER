@@ -1,0 +1,60 @@
+{
+  "model": "crf",
+  "approach": "classical",
+  "owner": "member_1",
+  "split": "validation",
+  "precision": 0.8544,
+  "recall": 0.7784,
+  "f1": 0.8146,
+  "per_entity": {
+    "PER": {
+      "precision": 0.8682305241818709,
+      "recall": 0.7858453473132372,
+      "f1": 0.8249862410566868,
+      "support": 3815
+    },
+    "ORG": {
+      "precision": 0.8349339735894358,
+      "recall": 0.7736373748609566,
+      "f1": 0.8031177829099307,
+      "support": 3596
+    },
+    "LOC": {
+      "precision": 0.8591954022988506,
+      "recall": 0.7754149377593361,
+      "f1": 0.8151581243184296,
+      "support": 3856
+    }
+  },
+  "config": {
+    "model": "crf",
+    "approach": "classical",
+    "owner": "member_1",
+    "normalization": {
+      "strip_diacritics": true,
+      "remove_tatweel": true,
+      "normalize_alef": true,
+      "normalize_ya": true
+    },
+    "use_gazetteer": true,
+    "algorithm": "lbfgs",
+    "c1": 0.1,
+    "c2": 0.1,
+    "max_iterations": 100,
+    "all_possible_transitions": true,
+    "tune": true,
+    "tuning": {
+      "c1": [
+        0.1,
+        0.5
+      ],
+      "c2": [
+        0.05,
+        0.1
+      ]
+    },
+    "seed": 42,
+    "output_dir": "results/models/crf"
+  },
+  "timestamp": "2026-11-27T14:14:41.672380+00:00"
+}
