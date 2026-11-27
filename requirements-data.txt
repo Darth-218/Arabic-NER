@@ -1,0 +1,7 @@
+# Data-only dependencies: enough to load/cache WikiANN and run EDA.
+# Use this first; modeling deps come from requirements-cpu.txt / requirements-gpu.txt.
+datasets>=2.19
+pandas>=2.2
+pyarrow>=15
+tqdm>=4.66
+pyyaml>=6.0
