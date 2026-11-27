@@ -43,7 +43,7 @@ data:
 	$(PY) data/load_data.py
 
 eda:
-	$(PY) -m jupyter nbconvert --to notebook --execute data/eda.ipynb --inplace
+	$(PY) data/eda.py
 
 quality:
 	$(PY) data/quality_report.py
