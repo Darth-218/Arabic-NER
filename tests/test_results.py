@@ -83,7 +83,8 @@ def test_results_table_marks_missing_models_and_reads_valid(tmp_path: Path) -> N
     assert "| Multilingual | mBERT | 0.1000 | 0.2000 | 0.3000 |" in results_table(tmp_path)
 
 
-def test_update_readme_table_requires_exactly_one_table(tmp_path: Path) -> None:
+def test_update_readme_table_requires_exactly_one_table(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(results_module, "METRICS_DIR", tmp_path / "empty_metrics")
     readme = tmp_path / "README.md"
     readme.write_text(
         "intro\n\n"
