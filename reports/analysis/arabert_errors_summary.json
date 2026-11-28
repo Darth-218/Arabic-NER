@@ -1,0 +1,43 @@
+{
+  "gold_spans": 11259,
+  "pred_spans": 11381,
+  "true_positives": 10349,
+  "categories": {
+    "correct": 10349,
+    "type_and_boundary": 88,
+    "missed": 150,
+    "boundary": 273,
+    "spurious": 272,
+    "type_only": 399
+  },
+  "confusions": {
+    "LOC->PER (type_and_boundary)": 7,
+    "ORG->LOC (type_and_boundary)": 18,
+    "LOC->ORG (type_only)": 125,
+    "PER->ORG (type_only)": 65,
+    "ORG->LOC (type_only)": 80,
+    "ORG->PER (type_only)": 71,
+    "ORG->PER (type_and_boundary)": 8,
+    "PER->LOC (type_only)": 23,
+    "PER->LOC (type_and_boundary)": 5,
+    "PER->ORG (type_and_boundary)": 23,
+    "LOC->PER (type_only)": 35,
+    "LOC->ORG (type_and_boundary)": 27
+  },
+  "truncation": {
+    "test": {
+      "sequences": 10000,
+      "over_128": 0,
+      "losing_words": 0,
+      "coverage": "64347/64347",
+      "longest_encoding": 84
+    },
+    "validation": {
+      "sequences": 10000,
+      "over_128": 0,
+      "losing_words": 0,
+      "coverage": "64291/64291",
+      "longest_encoding": 107
+    }
+  }
+}

@@ -26,6 +26,24 @@ Outputs (git-ignored):
 - `results/models/arabert/` — best checkpoint + tokenizer
 - `results/models/arabert/resolved_config.json` — merged settings of that run
 
+## Prediction and evaluation
+
+```bash
+# Canonical predictions: {"id", "tokens", "tags"} with original surface forms
+python src/approach_3_arabert/predict.py \
+  --model_dir results/models/arabert \
+  --split test \
+  --out results/predictions/arabert_test.jsonl
+
+# Canonical metrics: results/metrics/arabert.json (+ diagnostics)
+python src/evaluate.py --model arabert --config configs/arabert.yaml
+```
+
+`predict.py` reads the model's own `resolved_config.json` when present, so it
+uses the normalization and `max_len` the weights were trained with even if the
+YAML changed afterwards. `--max_samples N` is a smoke-test switch; use a
+separate `--out` path for smoke runs so they cannot overwrite real predictions.
+
 ## `configs/arabert.yaml`
 
 | Key | Meaning |
@@ -73,6 +91,10 @@ Outputs: `reports/analysis/arabert_hparam_search.json` (machine-readable) and
 `.md` (table for the report). The winning values are then written into
 `configs/arabert.yaml`, and that config is retrained once for the reportable
 model — the search's validation score is **not** the reported result.
+
+Result of the 5-trial search: **lr 5e-5, 4 epochs, `max_len` 128 → validation F1
+0.9197** (baseline 0.9129). `max_len` 96 gave no gain, and 2e-5/3e-5 trailed
+5e-5 at 3 epochs. `configs/arabert.yaml` already carries the winner.
 
 ## Tests
 
