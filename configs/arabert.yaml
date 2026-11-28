@@ -1,0 +1,33 @@
+# Member 3 (Omar Hesham) — AraBERT hyperparameters.
+# train.py reads this file; CLI flags override individual values when passed.
+model: arabert
+approach: arabic_transformer
+owner: member_3
+
+# AraBERTv02: BERT-base (~136M params) pretrained by AUB on ~77GB of Arabic
+# text (MSA news + Wikipedia), which matches WikiANN's news/Wikipedia domain.
+model_name: aubmindlab/bert-base-arabertv02
+cache_dir: data/raw
+
+epochs: 3
+batch_size: 8
+eval_batch_size: 16
+gradient_accumulation_steps: 2  # effective batch size 16 on a 4 GB GPU
+lr: 3.0e-5
+weight_decay: 0.01
+warmup_ratio: 0.1
+max_len: 128
+
+seed: 42
+bf16: true
+fp16: false
+gradient_checkpointing: true  # trades ~30% speed for a lot of GPU memory
+label_all_subwords: false  # only the first subword of a word carries its label
+
+normalization:
+  strip_diacritics: true
+  remove_tatweel: true
+  normalize_alef: true
+  normalize_ya: true
+
+output_dir: results/models/arabert
