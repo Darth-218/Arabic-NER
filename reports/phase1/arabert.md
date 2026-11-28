@@ -74,9 +74,11 @@ register more closely, while MARBERT brings dialect robustness.
 Selected: **lr 5e-5, 4 epochs, `max_len` 128**. Lower learning rates trail
 5e-5, a fourth epoch adds ~0.005 F1, and shortening the context loses a little
 accuracy with no speed benefit worth taking. `batch_size` stayed at 8 for VRAM
-reasons. The winning config was then retrained once as the deliverable; the
-retrain reached validation F1 0.9200, so the reported model is not the search
-run itself.
+reasons. The winning config was then retrained once as the deliverable; the retrain
+reached validation F1 0.9200, so the reported model is not the search run
+itself. (The trainer's own bf16 evaluation printed 0.9202; the committed
+metrics file, produced by fp32 inference through `predict.py` and
+`evaluate.py`, is the canonical 0.9200.)
 
 ## 5. Results
 
@@ -119,8 +121,9 @@ down as:
 | Missed entirely | 150 |
 | Unmatched predicted spans (spurious) | 272 |
 
-**53.5% of the missed gold spans are type errors on a correctly located span**,
-and LOC↔ORG alone accounts for 250 spans. ORG is the weakest class (0.8843),
+**53.5% of the missed gold spans carry the wrong label** (399 of them with the
+boundary exactly right, 88 also wrong on the boundary), and LOC↔ORG alone
+accounts for 250 spans. ORG is the weakest class (0.8843),
 driven by long, transliterated and place-like organization names, e.g.:
 
 ```
