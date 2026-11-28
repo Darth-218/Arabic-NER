@@ -1,0 +1,57 @@
+{
+  "model": "arabert",
+  "approach": "arabic_transformer",
+  "owner": "member_3",
+  "split": "validation",
+  "precision": 0.9171,
+  "recall": 0.923,
+  "f1": 0.92,
+  "per_entity": {
+    "PER": {
+      "precision": 0.9380715965508231,
+      "recall": 0.9410222804718218,
+      "f1": 0.9395446218267469,
+      "support": 3815
+    },
+    "ORG": {
+      "precision": 0.8763469827586207,
+      "recall": 0.9046162402669633,
+      "f1": 0.8902572523262178,
+      "support": 3596
+    },
+    "LOC": {
+      "precision": 0.9357894736842105,
+      "recall": 0.9221991701244814,
+      "f1": 0.928944618599791,
+      "support": 3856
+    }
+  },
+  "config": {
+    "model": "arabert",
+    "approach": "arabic_transformer",
+    "owner": "member_3",
+    "model_name": "aubmindlab/bert-base-arabertv02",
+    "cache_dir": "data/raw",
+    "epochs": 4,
+    "batch_size": 8,
+    "eval_batch_size": 16,
+    "gradient_accumulation_steps": 2,
+    "lr": 5e-05,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.1,
+    "max_len": 128,
+    "seed": 42,
+    "bf16": true,
+    "fp16": false,
+    "gradient_checkpointing": true,
+    "label_all_subwords": false,
+    "normalization": {
+      "strip_diacritics": true,
+      "remove_tatweel": true,
+      "normalize_alef": true,
+      "normalize_ya": true
+    },
+    "output_dir": "results/models/arabert"
+  },
+  "timestamp": "2026-11-28T08:47:14.608418+00:00"
+}
