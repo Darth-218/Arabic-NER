@@ -68,9 +68,10 @@ reproduces the official score exactly (TP 10,349 → P 0.9093 / R 0.9192).
 | Missed entirely | 150 | 1.33% |
 | Spurious predicted spans (of 11,381 predicted) | 272 | 2.39% of predictions |
 
-Wrong-type errors dominate: 487 of 910 missed gold spans (53.5%) have a
-detected span whose only problem is the label. Boundary tuning alone therefore
-cannot recover most of the gap — type disambiguation is the main lever.
+Wrong labels dominate: 487 of the 910 missed gold spans (53.5%) have a detected
+span with the wrong type. For 399 of those the boundary is exactly right; the
+other 88 also differ in boundary. Boundary tuning alone therefore cannot
+recover most of the gap — type disambiguation is the main lever.
 
 ## Type confusions (count, matched overlaps)
 
@@ -80,8 +81,8 @@ cannot recover most of the gap — type disambiguation is the main lever.
 | ORG → LOC | 98 |
 | ORG → PER | 79 |
 | PER → ORG | 88 |
-| LOC → PER | 35 |
-| PER → LOC | 23 |
+| LOC → PER | 42 |
+| PER → LOC | 28 |
 
 LOC↔ORG is the single largest confusion pair (250 spans), which fits WikiANN:
 institution-like place names and place-like organization names share vocabulary,
