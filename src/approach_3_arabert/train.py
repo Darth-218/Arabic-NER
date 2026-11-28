@@ -25,6 +25,7 @@ if __package__ in (None, ""):  # allow `python src/approach_3_arabert/train.py`
 
 from data.load_data import load_arabic_wikiann
 from src.common.config import (
+    APPROACHES,
     DEFAULT_SEED,
     ID2LABEL,
     LABEL2ID,
@@ -62,6 +63,10 @@ DEFAULTS: dict[str, Any] = {
     "max_train_samples": None,
     "max_eval_samples": None,
 }
+
+# Metadata keys are required in the YAML; everything else has a DEFAULTS entry.
+METADATA_KEYS = ("model", "approach", "owner")
+CONFIG_KEYS = frozenset(DEFAULTS) | {"cache_dir", "normalization", *METADATA_KEYS}
 
 CLI_OVERRIDABLE = (
     "output_dir",
@@ -144,6 +149,72 @@ def resolve_config(
         if value is not None:
             resolved[key] = value
     return resolved
+
+
+def validate_config(config: Mapping[str, Any]) -> None:
+    """Fail fast on typos or impossible values, before any download starts.
+
+    The YAML is hand-edited, so a silent typo (e.g. `epochs: 0` or
+    `learning_rate:`) would otherwise waste a full run.
+    """
+    unknown = sorted(set(config) - CONFIG_KEYS)
+    if unknown:
+        raise ValueError(
+            f"Unknown config key(s): {', '.join(unknown)}. "
+            f"Known keys: {', '.join(sorted(CONFIG_KEYS))}"
+        )
+
+    for key in METADATA_KEYS:
+        if key not in config:
+            raise ValueError(f"configs/arabert.yaml must define `{key}`")
+    if config["model"] != "arabert":
+        raise ValueError(f"model must be 'arabert', got {config['model']!r}")
+    if config["approach"] != APPROACHES["arabert"]:
+        raise ValueError(
+            f"approach must be {APPROACHES['arabert']!r}, got {config['approach']!r}"
+        )
+    if config["owner"] != "member_3":
+        raise ValueError(f"owner must be 'member_3', got {config['owner']!r}")
+
+    for key in (
+        "epochs",
+        "batch_size",
+        "eval_batch_size",
+        "gradient_accumulation_steps",
+        "max_len",
+    ):
+        value = config[key]
+        if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+            raise ValueError(f"{key} must be a positive integer, got {value!r}")
+    seed = config["seed"]
+    if isinstance(seed, bool) or not isinstance(seed, int) or seed < 0:
+        raise ValueError(f"seed must be a non-negative integer, got {seed!r}")
+    if config["max_len"] > 512:
+        raise ValueError(f"max_len must be <= 512, got {config['max_len']}")
+
+    for key in ("lr", "weight_decay"):
+        value = config[key]
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise ValueError(f"{key} must be a number, got {value!r}")
+        if key == "lr" and value <= 0:
+            raise ValueError(f"lr must be > 0, got {value}")
+        if key == "weight_decay" and value < 0:
+            raise ValueError(f"weight_decay must be >= 0, got {value}")
+
+    if not 0 <= float(config["warmup_ratio"]) < 1:
+        raise ValueError(
+            f"warmup_ratio must be in [0, 1), got {config['warmup_ratio']}"
+        )
+    if config["bf16"] and config["fp16"]:
+        raise ValueError("bf16 and fp16 cannot both be enabled")
+    if "normalization" in config and not isinstance(config["normalization"], dict):
+        raise ValueError("normalization must be a mapping of toggles")
+    for key in ("max_train_samples", "max_eval_samples"):
+        value = config.get(key)
+        if value is not None and (
+            isinstance(value, bool) or not isinstance(value, int) or value < 1
+        ):
+            raise ValueError(f"{key} must be a positive integer or null, got {value!r}")
 
 
 def build_model_and_tokenizer(model_name: str, num_labels: int) -> tuple[Any, Any]:
@@ -278,6 +349,7 @@ def main(argv: Sequence[str] | None = None) -> None:
     arguments = build_parser().parse_args(argv)
     file_config = load_config(arguments.config)
     config = resolve_config(vars(arguments), file_config)
+    validate_config(config)
     set_seed(int(config["seed"]))
     ensure_dirs()
 
