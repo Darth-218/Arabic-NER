@@ -1,0 +1,132 @@
+{
+  "model": "arabert",
+  "approach": "arabic_transformer",
+  "owner": "member_3",
+  "selection_split": "validation",
+  "baseline": {
+    "lr": 3e-05,
+    "epochs": 3,
+    "batch_size": 8,
+    "max_len": 128,
+    "f1": 0.9128956778950157
+  },
+  "grid_note": "batch_size fixed at 8 (4 GB VRAM limit); lr, epochs and max_len searched in three stages",
+  "results": [
+    {
+      "stage": 1,
+      "name": "lr2e5_e3_bs8_len128",
+      "lr": 2e-05,
+      "epochs": 3,
+      "batch_size": 8,
+      "max_len": 128,
+      "note": "learning-rate sweep at the default schedule",
+      "precision": 0.9056122448979592,
+      "recall": 0.9137303630070116,
+      "f1": 0.909653191959355,
+      "loss": 0.15722250938415527,
+      "per_entity": {
+        "PER": 0.9372373949579832,
+        "ORG": 0.8720626631853786,
+        "LOC": 0.9178506845776285
+      },
+      "seconds": 713.2
+    },
+    {
+      "stage": 1,
+      "name": "lr3e5_e3_bs8_len128",
+      "lr": 3e-05,
+      "epochs": 3,
+      "batch_size": 8,
+      "max_len": 128,
+      "note": "learning-rate sweep at the default schedule",
+      "precision": 0.9074367088607594,
+      "recall": 0.9162154965829413,
+      "f1": 0.9118049728392881,
+      "loss": 0.15745584666728973,
+      "per_entity": {
+        "PER": 0.9375899515896899,
+        "ORG": 0.8776741634668129,
+        "LOC": 0.918526206538661
+      },
+      "seconds": 716.4
+    },
+    {
+      "stage": 1,
+      "name": "lr5e5_e3_bs8_len128",
+      "lr": 5e-05,
+      "epochs": 3,
+      "batch_size": 8,
+      "max_len": 128,
+      "note": "learning-rate sweep at the default schedule",
+      "precision": 0.909705753184014,
+      "recall": 0.9192331587822845,
+      "f1": 0.9144446406498322,
+      "loss": 0.158571258187294,
+      "per_entity": {
+        "PER": 0.9398220826792255,
+        "ORG": 0.8843835616438355,
+        "LOC": 0.9177477944992216
+      },
+      "seconds": 713.6
+    },
+    {
+      "stage": 2,
+      "name": "lr5e5_e4_bs8_len128",
+      "lr": 5e-05,
+      "epochs": 4,
+      "batch_size": 8,
+      "max_len": 128,
+      "note": "one extra epoch at the winning learning rate",
+      "precision": 0.9161602818141787,
+      "recall": 0.9233158782284547,
+      "f1": 0.9197241623198656,
+      "loss": 0.17421725392341614,
+      "per_entity": {
+        "PER": 0.9430787432627843,
+        "ORG": 0.885992591576348,
+        "LOC": 0.9285529381309864
+      },
+      "seconds": 944.8
+    },
+    {
+      "stage": 3,
+      "name": "lr5e5_e4_bs8_len96",
+      "lr": 5e-05,
+      "epochs": 4,
+      "batch_size": 8,
+      "max_len": 96,
+      "note": "shorter context window to test the truncation trade-off",
+      "precision": 0.9129938542581212,
+      "recall": 0.9230427835966625,
+      "f1": 0.9179908192090395,
+      "loss": 0.17995429039001465,
+      "per_entity": {
+        "PER": 0.9442048869724291,
+        "ORG": 0.8852233676975946,
+        "LOC": 0.9228778467908904
+      },
+      "seconds": 953.0
+    }
+  ],
+  "failures": [],
+  "best": {
+    "stage": 2,
+    "name": "lr5e5_e4_bs8_len128",
+    "lr": 5e-05,
+    "epochs": 4,
+    "batch_size": 8,
+    "max_len": 128,
+    "note": "one extra epoch at the winning learning rate",
+    "precision": 0.9161602818141787,
+    "recall": 0.9233158782284547,
+    "f1": 0.9197241623198656,
+    "loss": 0.17421725392341614,
+    "per_entity": {
+      "PER": 0.9430787432627843,
+      "ORG": 0.885992591576348,
+      "LOC": 0.9285529381309864
+    },
+    "seconds": 944.8
+  },
+  "next_step": "write lr=5e-05, epochs=4, batch_size=8, max_len=128 into configs/arabert.yaml, then retrain once with `make train MODEL=arabert`"
+}

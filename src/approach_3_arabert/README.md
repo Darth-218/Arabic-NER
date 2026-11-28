@@ -48,6 +48,32 @@ Outputs (git-ignored):
 `validate_config()` rejects unknown keys and impossible values before any
 download starts, so typos fail in seconds instead of after an hour.
 
+## Hyperparameter search
+
+```bash
+python src/approach_3_arabert/hparam_search.py --dry-run   # print the plan
+python src/approach_3_arabert/hparam_search.py             # 5 trials, ~70 min on the 3050
+```
+
+Trials run through the same code path as `train.py`, select on **validation F1**
+(test is untouched until issue 5.4), and save no checkpoints. Stages:
+
+| Stage | Knobs | Values |
+| :--- | :--- | :--- |
+| 1 | learning rate | 2e-5 / 3e-5 / 5e-5 at epochs 3, max_len 128 |
+| 2 | epochs | best lr with 4 epochs |
+| 3 | max_len | best lr+epochs with max_len 96 |
+
+`batch_size` stays at 8: it is the largest the 4 GB card holds at `max_len 128`,
+and accumulation already makes the effective batch 16. Everything else (bf16,
+gradient checkpointing, warmup, weight decay, seed) is fixed so the comparison
+isolates the tuned knobs.
+
+Outputs: `reports/analysis/arabert_hparam_search.json` (machine-readable) and
+`.md` (table for the report). The winning values are then written into
+`configs/arabert.yaml`, and that config is retrained once for the reportable
+model — the search's validation score is **not** the reported result.
+
 ## Tests
 
 `tests/test_arabert.py` runs fully offline (stub splits, no torch):

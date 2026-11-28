@@ -188,3 +188,87 @@ def test_compute_metrics_ignores_padding_and_continuation_subwords() -> None:
 
     assert scores["f1"] == pytest.approx(1.0)
     assert {"PER_f1", "ORG_f1", "LOC_f1"} <= set(scores)
+
+
+# --- hyperparameter search (issue 5.3) -------------------------------------
+
+
+def _trial(**overrides: Any) -> dict[str, Any]:
+    trial = {
+        "stage": 1,
+        "name": "lr3e5_e3_bs8_len128",
+        "lr": 3e-5,
+        "epochs": 3,
+        "batch_size": 8,
+        "max_len": 128,
+        "note": "test",
+    }
+    trial.update(overrides)
+    return trial
+
+
+def test_trial_names_are_stable_and_readable() -> None:
+    from src.approach_3_arabert import hparam_search
+
+    assert hparam_search.trial_name(3e-5, 3, 128) == "lr3e5_e3_bs8_len128"
+    assert hparam_search.trial_name(2e-5, 4, 96) == "lr2e5_e4_bs8_len96"
+    assert hparam_search.trial_name(5e-5, 3, 128) == "lr5e5_e3_bs8_len128"
+
+
+def test_stage1_grid_sweeps_learning_rate() -> None:
+    from src.approach_3_arabert import hparam_search
+
+    trials = hparam_search.stage1_grid()
+    assert [trial["lr"] for trial in trials] == [2e-5, 3e-5, 5e-5]
+    assert len({trial["name"] for trial in trials}) == len(trials)
+    assert all(trial["epochs"] == 3 and trial["max_len"] == 128 for trial in trials)
+
+
+def test_follow_up_trials_add_an_epoch_then_shorten_the_context() -> None:
+    from src.approach_3_arabert import hparam_search
+
+    stages = hparam_search.follow_up_trials({"lr": 5e-5, "epochs": 3, "max_len": 128})
+    assert [stage["stage"] for stage in stages] == [2, 3]
+    assert stages[0]["epochs"] == 4 and stages[0]["max_len"] == 128
+    assert stages[1]["epochs"] == 4 and stages[1]["max_len"] == 96
+    assert {stage["lr"] for stage in stages} == {5e-5}
+
+
+def test_build_run_config_overrides_only_the_tuned_knobs() -> None:
+    from src.approach_3_arabert import hparam_search
+
+    before = base_config()
+    config = hparam_search.build_run_config(before, _trial(lr=2e-5, epochs=4, max_len=96))
+
+    assert (config["lr"], config["epochs"], config["max_len"]) == (2e-5, 4, 96)
+    assert config["model_name"] == before["model_name"]
+    assert config["output_dir"].endswith("arabert_hparam/lr3e5_e3_bs8_len128")
+    assert config["max_train_samples"] is None and config["max_eval_samples"] is None
+
+
+def test_build_run_config_rejects_an_impossible_trial() -> None:
+    from src.approach_3_arabert import hparam_search
+
+    with pytest.raises(ValueError):
+        hparam_search.build_run_config(base_config(), _trial(lr=0.0))
+
+
+def test_build_summary_picks_the_best_validation_score() -> None:
+    from src.approach_3_arabert import hparam_search
+
+    rows = [
+        {**_trial(name="lr2e5_e3_bs8_len128", lr=2e-5), "precision": 0.88, "recall": 0.89, "f1": 0.885},
+        {**_trial(name="lr5e5_e3_bs8_len128", lr=5e-5), "precision": 0.90, "recall": 0.91, "f1": 0.905},
+    ]
+    failures = [{**_trial(name="lr9e5_e3_bs8_len128"), "error": "OutOfMemoryError: test"}]
+    summary = hparam_search.build_summary(rows, failures)
+
+    assert summary["selection_split"] == "validation"
+    assert summary["best"]["name"] == "lr5e5_e3_bs8_len128"
+    assert summary["failures"] == failures
+    assert "lr=5e-05" in summary["next_step"]
+
+    markdown = hparam_search.render_markdown(summary)
+    assert "lr5e5_e3_bs8_len128" in markdown
+    assert "validation" in markdown
+    assert "OutOfMemoryError" in markdown
